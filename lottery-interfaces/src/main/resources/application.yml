@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    username: root
-    password: 1234
-    url: jdbc:mysql://127.0.0.1:3306/lottery?useUnicode=true
+    username: chenxinli
+    password: jpxx1724
+    url: jdbc:mysql://127.0.0.1:3306/mylottery?useUnicode=true
     driver-class-name: com.mysql.jdbc.Driver
 
 mybatis:
@@ -23,4 +23,6 @@ dubbo:
     name: dubbo
     port: 20880
   scan:
-    base-packages: cn.itedus.lottery.rpc
+    base-packages: fr.utc.mylottery.rpc
+
+

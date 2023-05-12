@@ -2,15 +2,15 @@ package fr.utc.mylottery.rpc.req;
 
 import java.io.Serializable;
 
-public class DrawReq implements Serializable {
-    private Long userId;
+public class LotReq implements Serializable {
+    private String userId;
     private Long strategyId;
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

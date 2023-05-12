@@ -1,14 +1,12 @@
-package fr.utc.mylottery.strategy.service.algorithm.impl;
+package fr.utc.mylottery.domain.strategy.service.algorithm.impl;
 
-import fr.utc.mylottery.strategy.service.algorithm.BaseAlgorithm;
+import fr.utc.mylottery.domain.strategy.service.algorithm.BaseAlgorithm;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.List;
 
-/**
- * 必中奖策略抽奖，排掉已经中奖的概率，重新计算中奖范围
- */
+
 @Component("singleRateRandomDrawAlgorithm")
 public class SingleRateRandomDrawAlgorithm extends BaseAlgorithm {
     @Override
@@ -24,7 +22,7 @@ public class SingleRateRandomDrawAlgorithm extends BaseAlgorithm {
 
         // 返回结果
         String awardId = rateTuple[idx];
-        if (excludeAwardIds.contains(awardId)) return "未中奖";
+        if (excludeAwardIds.contains(awardId)) return null;
 
         return awardId;
     }

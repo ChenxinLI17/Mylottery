@@ -1,7 +1,7 @@
-package fr.utc.mylottery.strategy.service.algorithm;
+package fr.utc.mylottery.domain.strategy.service.algorithm;
 
 import java.util.List;
-import fr.utc.mylottery.strategy.model.vo.AwardRateInfo;
+import fr.utc.mylottery.domain.strategy.model.vo.AwardRateInfo;
 
 public interface IDrawAlgorithm {
 

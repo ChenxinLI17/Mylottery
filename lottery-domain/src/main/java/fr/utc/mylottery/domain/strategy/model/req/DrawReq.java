@@ -1,4 +1,4 @@
-package fr.utc.mylottery.strategy.model.req;
+package fr.utc.mylottery.domain.strategy.model.req;
 
 public class DrawReq {
     private String uId;

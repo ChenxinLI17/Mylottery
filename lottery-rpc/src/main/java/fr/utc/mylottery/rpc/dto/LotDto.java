@@ -2,10 +2,10 @@ package fr.utc.mylottery.rpc.dto;
 
 import java.io.Serializable;
 
-public class DrawDto implements Serializable {
+public class LotDto implements Serializable {
     private String awardId;
     private String awardName;
-    private Long userId;
+    private String userId;
     private Long strategyId;
 
     public String getAwardId() {
@@ -24,11 +24,11 @@ public class DrawDto implements Serializable {
         this.awardName = awardName;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

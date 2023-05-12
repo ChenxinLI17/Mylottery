@@ -1,4 +1,4 @@
-package fr.utc.mylottery.strategy.model.vo;
+package fr.utc.mylottery.domain.strategy.model.vo;
 
 import java.math.BigDecimal;
 

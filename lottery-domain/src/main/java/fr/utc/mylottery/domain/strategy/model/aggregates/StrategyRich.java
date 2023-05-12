@@ -1,4 +1,4 @@
-package fr.utc.mylottery.strategy.model.aggregates;
+package fr.utc.mylottery.domain.strategy.model.aggregates;
 
 import fr.utc.mylottery.infrastructure.po.Strategy;
 import fr.utc.mylottery.infrastructure.po.StrategyDetail;
