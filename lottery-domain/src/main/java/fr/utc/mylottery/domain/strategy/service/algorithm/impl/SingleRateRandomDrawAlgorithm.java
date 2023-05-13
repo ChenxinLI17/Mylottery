@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 import java.security.SecureRandom;
 import java.util.List;
 
-
+/**
+ * @description: 单项随机概率抽奖，抽到一个已经排掉的奖品则未中奖
+ */
 @Component("singleRateRandomDrawAlgorithm")
 public class SingleRateRandomDrawAlgorithm extends BaseAlgorithm {
     @Override

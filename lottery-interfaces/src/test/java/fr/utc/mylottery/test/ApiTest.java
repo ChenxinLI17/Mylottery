@@ -1,6 +1,7 @@
 package fr.utc.mylottery.test;
 
 import com.alibaba.fastjson.JSON;
+import fr.utc.mylottery.domain.activity.model.vo.AlterStateVO;
 import fr.utc.mylottery.infrastructure.dao.IActivityDao;
 import fr.utc.mylottery.infrastructure.po.Activity;
 import org.junit.Test;
@@ -41,6 +42,12 @@ public class ApiTest {
     public void test_select() {
         Activity activity = activityDao.queryActivityById(100002L);
         logger.info("测试结果：{}", JSON.toJSONString(activity));
+    }
+
+    //成功
+    @Test
+    public void test_update(){
+        activityDao.alterState(100001L,5,3);
     }
 
 }

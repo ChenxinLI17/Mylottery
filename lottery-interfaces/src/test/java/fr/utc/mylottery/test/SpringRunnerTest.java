@@ -40,6 +40,7 @@ public class SpringRunnerTest {
         drawExec.doDrawExec(new DrawReq("小蜗牛", 10001L));
         drawExec.doDrawExec(new DrawReq("八杯水", 10001L));
     }
+    //success
     @Test
     public void test_award() {
         // 执行抽奖

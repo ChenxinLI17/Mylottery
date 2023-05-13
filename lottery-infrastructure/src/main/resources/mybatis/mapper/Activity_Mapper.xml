@@ -26,11 +26,11 @@
              #{stockCount}, #{takeCount}, #{state}, #{creator}, now(), now())
     </insert>
 
-<!--    <update id="alterState" parameterType="cn.itedus.lottery.domain.activity.model.vo.AlterStateVO">-->
-<!--        UPDATE activity-->
-<!--        SET state = #{afterState}-->
-<!--        WHERE activity_id = #{activityId} AND state = #{beforeState}-->
-<!--    </update>-->
+    <update id="alterState" parameterType="fr.utc.mylottery.domain.activity.model.vo.AlterStateVO">
+        UPDATE activity
+        SET state = #{afterState}
+        WHERE activity_id = #{activityId} AND state = #{beforeState}
+    </update>
 
     <select id="queryActivityById" parameterType="java.lang.Long" resultMap="activityMap">
         SELECT activity_id, activity_name, activity_desc, begin_date_time, end_date_time,

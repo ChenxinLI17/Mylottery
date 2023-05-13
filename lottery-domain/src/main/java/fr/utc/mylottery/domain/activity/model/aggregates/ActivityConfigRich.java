@@ -1,5 +1,9 @@
 package fr.utc.mylottery.domain.activity.model.aggregates;
 
+import fr.utc.mylottery.domain.activity.model.vo.ActivityVO;
+import fr.utc.mylottery.domain.activity.model.vo.AwardVO;
+import fr.utc.mylottery.domain.activity.model.vo.StrategyVO;
+
 import java.util.List;
 
 public class ActivityConfigRich {

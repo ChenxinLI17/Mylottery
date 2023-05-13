@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 必中奖策略抽奖，排掉已经中奖的概率，重新计算中奖范围
+ * @description: 必中奖策略抽奖，排掉已经中奖的概率，重新计算中奖范围
  */
 @Component("entiretyRateRandomDrawAlgorithm")
 public class EntiretyRateRandomDrawAlgorithm extends BaseAlgorithm {

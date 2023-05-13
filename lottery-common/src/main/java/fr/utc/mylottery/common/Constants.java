@@ -25,6 +25,50 @@ public class Constants {
 
     }
     /**
+     * 活动状态：1编辑、2提审、3撤审、4通过、5运行(审核通过后worker扫描状态)、6拒绝、7关闭、8开启
+     */
+    public enum ActivityState {
+
+        /** 1：编辑 */
+        EDIT(1, "编辑"),
+        /** 2：提审 */
+        ARRAIGNMENT(2, "提审"),
+        /** 3：通过 */
+        PASS(3, "通过"),
+        /** 4：运行(活动中) */
+        DOING(4, "运行(活动中)"),
+        /** 5：拒绝 */
+        REFUSE(5, "拒绝"),
+        /** 6：关闭 */
+        CLOSE(6, "关闭"),
+        /** 7：开启 */
+        OPEN(7, "开启");
+
+        private Integer code;
+        private String info;
+
+        ActivityState(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
+        }
+    }
+    /**
      * 抽奖策略模式：单项概率、总体概率
      * 场景：两种抽奖算法描述，场景A20%、B30%、C50%
      * 单项概率：如果A奖品抽空后，B和C保持目前中奖概率，用户抽奖扔有20%中为A，因A库存抽空则结果展示为未中奖。为了运营成本，通常这种情况的使用的比较多

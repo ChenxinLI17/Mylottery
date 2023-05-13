@@ -16,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * @description: 定义抽象抽奖过程，模板模式
+ */
 public abstract class AbstractDrawBase extends DrawStrategySupport implements IDrawExec{
     private Logger logger = LoggerFactory.getLogger(AbstractDrawBase.class);
 

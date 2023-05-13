@@ -1,4 +1,4 @@
-package fr.utc.mylottery.test;
+package fr.utc.mylottery.test.domain;
 
 import fr.utc.mylottery.domain.strategy.model.vo.AwardRateInfo;
 import fr.utc.mylottery.domain.strategy.service.algorithm.IDrawAlgorithm;

@@ -3,6 +3,9 @@ package fr.utc.mylottery.domain.strategy.service.algorithm;
 import java.util.List;
 import fr.utc.mylottery.domain.strategy.model.vo.AwardRateInfo;
 
+/**
+ * @description: 抽奖算法接口
+ */
 public interface IDrawAlgorithm {
 
     void initRateTuple(Long strategyId, List<AwardRateInfo> awardRateInfoList);
