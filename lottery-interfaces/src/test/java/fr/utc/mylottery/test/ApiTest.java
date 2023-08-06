@@ -47,7 +47,7 @@ public class ApiTest {
     //成功
     @Test
     public void test_update(){
-        activityDao.alterState(100001L,5,3);
+        activityDao.alterState(100002L,5,3);
     }
 
 }

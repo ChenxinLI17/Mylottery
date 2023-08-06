@@ -20,10 +20,8 @@ import java.util.List;
 public class StrategyRepository implements IStrategyRepository {
     @Resource
     private IStrategyDao strategyDao;
-
     @Resource
     private IStrategyDetailDao strategyDetailDao;
-
     @Resource
     private IAwardDao awardDao;
 

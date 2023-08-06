@@ -1,7 +1,8 @@
 package fr.utc.mylottery.infrastructure.po;
 
-import java.util.Date;
 
+
+import java.util.Date;
 public class Activity {
 
     // 自增ID

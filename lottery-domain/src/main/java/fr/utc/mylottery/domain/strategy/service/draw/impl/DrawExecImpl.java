@@ -32,7 +32,7 @@ public class DrawExecImpl extends AbstractDrawBase implements IDrawExec {
             return null;
         }
 
-        /*
+        /***
          * 扣减库存，暂时采用数据库行级锁的方式进行扣减库存，后续优化为 Redis 分布式锁扣减 decr/incr
          * 注意：通常数据库直接锁行记录的方式并不能支撑较大体量的并发，但此种方式需要了解，
          * 因为在分库分表下的正常数据流量下的个人数据记录中，是可以使用行级锁的，

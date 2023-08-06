@@ -10,6 +10,7 @@ import fr.utc.mylottery.domain.strategy.model.req.DrawReq;
 import fr.utc.mylottery.domain.strategy.model.res.DrawResult;
 import fr.utc.mylottery.domain.strategy.model.vo.DrawAwardInfo;
 import fr.utc.mylottery.domain.strategy.service.draw.IDrawExec;
+import fr.utc.mylottery.domain.support.ids.IIdGenerator;
 import fr.utc.mylottery.infrastructure.dao.IActivityDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SpringRunnerTest {
@@ -31,7 +33,8 @@ public class SpringRunnerTest {
     private IDrawExec drawExec;
     @Resource
     private DistributionGoodsFactory distributionGoodsFactory;
-
+    @Resource
+    private IIdGenerator snowflake;
     //成功
     @Test
     public void test_drawExec() {
@@ -64,5 +67,27 @@ public class SpringRunnerTest {
 
         logger.info("测试结果：{}", JSON.toJSONString(distributionRes));
     }
+    @Test
+    public void test_award1() {
+        // 执行抽奖
+        DrawResult drawResult = drawExec.doDrawExec(new DrawReq("小傅哥", 10001L));
 
+        // 判断抽奖结果
+        Integer drawState = drawResult.getDrawState();
+        if (Constants.DrawState.FAIL.getCode().equals(drawState)) {
+            logger.info("未中奖 DrawAwardInfo is null");
+            return;
+        }
+        DrawAwardInfo drawAwardInfo = drawResult.getDrawAwardInfo();
+        String orderId = Long.toString(snowflake.nextId());
+        GoodsReq goodsReq = new GoodsReq(drawResult.getuId(), orderId, drawAwardInfo.getAwardId(), drawAwardInfo.getAwardName(), drawAwardInfo.getAwardContent());
+
+        System.out.println(drawAwardInfo.getAwardType());
+        // 根据 awardType 从抽奖工厂中获取对应的发奖服务
+        IDistributionGoods distributionGoodsService = distributionGoodsFactory.getDistributionGoodsService(drawAwardInfo.getAwardType());
+        DistributionRes distributionRes = distributionGoodsService.doDistribution(goodsReq);
+
+        logger.info("订单号：{}", orderId);
+        logger.info("测试结果：{}", JSON.toJSONString(distributionRes));
+    }
 }

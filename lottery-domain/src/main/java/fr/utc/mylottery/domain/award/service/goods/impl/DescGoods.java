@@ -14,7 +14,7 @@ public class DescGoods extends DistributionBase implements IDistributionGoods {
     public DistributionRes doDistribution(GoodsReq req) {
 
         // 模拟发放接口
-        logger.info("模拟发放接口 uId：{} awardContent：{}", req.getuId(), req.getAwardContent());
+        logger.info("模拟文字描述奖品发放接口 uId：{} awardContent：{}", req.getuId(), req.getAwardContent());
 
         super.updateUserAwardState(req.getuId(), req.getOrderId(), req.getAwardId(), Constants.AwardState.SUCCESS.getCode(), Constants.AwardState.SUCCESS.getInfo());
 

@@ -15,6 +15,7 @@
         <module>lottery-interfaces</module>
         <module>lottery-common</module>
         <module>lottery-domain</module>
+        <module>lottery-dbrouter</module>
     </modules>
     <properties>
         <!-- Base -->

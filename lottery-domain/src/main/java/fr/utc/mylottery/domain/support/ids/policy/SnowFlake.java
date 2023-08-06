@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -16,16 +17,21 @@ import java.time.ZoneOffset;
 /**
  * @description: algorithm snowflake
  */
-@Component
+@Component("snowflake")
 public class SnowFlake implements IIdGenerator {
+    @Resource
+    private IPSupport ipSupport;
     private Logger logger = LoggerFactory.getLogger(SnowFlake.class);
     /**
-     * starting timestamp
+     * starting timestamp : 2023-05-27  00:00:00
      */
-    LocalDateTime dateTime = LocalDateTime.of(2023, 5, 27, 0, 0, 0);
-    private final long startTimestamp = dateTime.toEpochSecond(ZoneOffset.UTC);
+    //LocalDateTime dateTime = LocalDateTime.of(2023, 5, 27, 0, 0, 0);
+    //private final long startTimestamp = dateTime.toEpochSecond(ZoneOffset.UTC);
     /**
-     *
+     *  timestamp : 41 bits
+     *  dataCenterIdBits : 5 bits
+     *  workerIdBits : 5 bits
+     *  sequence : 12 bits
      */
     private final long dataCenterIdBits = 5L;
     private final long workerIdBits = 5L;
@@ -40,29 +46,32 @@ public class SnowFlake implements IIdGenerator {
     private long dataCenterId;
     private long sequence = 0L;
     private long lastTimestamp = -1L;
+    /**
+     * use local address IP as workerId
+     */
     @PostConstruct
-    public void init() {
-        try {
-            Socket socket = new Socket("www.google.com", 80);
-            InetAddress localAddress = socket.getLocalAddress();
-            byte[] ipAddress = localAddress.getAddress();
-            workerId = 0;
-
-            for (byte octet : ipAddress) {
-                workerId <<= 8;  // 左移8位
-                workerId |= (octet & 0xFF);  // 将每个字节与0xFF进行按位与运算后合并
-            }
-
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void init() throws UnknownHostException {
+        InetAddress localAddress = ipSupport.getLocalIP();
+        logger.info("ip "+ localAddress);
+        if(localAddress == null){
+            localAddress = InetAddress.getLocalHost();
         }
-        logger.info("w3"+workerId);
-        this.workerId = workerId >> 16 & 31;
-        logger.info("w4"+workerId);
-        dataCenterId = 1L;
+        byte[] ipAddress = localAddress.getAddress();
+        workerId = 0;
+
+        //IP地址转换成32位二进制
+        for (byte octet : ipAddress) {
+            workerId <<= 8;  // 左移8位
+            workerId |= (octet & 0xFF);  // 将每个字节与0xFF进行按位与运算后合并
+        }
+
+        logger.info("w3 "+workerId);
+        //取后五位，因为workerId的位数是5
+        this.workerId = workerId & 31;
+        logger.info("w4 "+workerId);
+        dataCenterId = 2L;
     }
+
     /**
      * Blocking to the next millisecond until a new timestamp is obtained.
      * @return current timestamp
@@ -78,7 +87,8 @@ public class SnowFlake implements IIdGenerator {
     @Override
     public synchronized long nextId() {
         long timestamp = System.currentTimeMillis();
-        if(timestamp - startTimestamp < lastTimestamp){
+        if(timestamp < lastTimestamp){
+            // 雪花算法服务器快于时间钟服务器：雪花算法服务器的时间晚于时间钟服务器
             throw new RuntimeException(String.format("Clock moved backwards. Refusing to generate id for %d milliseconds", lastTimestamp));
         }
         if(lastTimestamp == timestamp){
