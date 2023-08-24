@@ -56,7 +56,7 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
         }
 
         // 校验：个人库存 - 个人活动剩余可领取次数
-        if (bill.getUserTakeLeftCount() <= 0) {
+        if (bill.getUserTakeLeftCount() != null && bill.getUserTakeLeftCount() <= 0) {
             logger.warn("个人领取次数非可用 userTakeLeftCount：{}", bill.getUserTakeLeftCount());
             return Result.buildResult(Constants.ResponseCode.UN_ERROR, "个人领取次数非可用");
         }
