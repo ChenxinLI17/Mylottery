@@ -55,7 +55,7 @@ public class UserStrategyExportDaoTest {
 
     @Test
     public void test_select() {
-        UserStrategyExport userStrategyExport = userStrategyExportDao.queryUserStrategyExportByUId("7092735165566427136");
+        UserStrategyExport userStrategyExport = userStrategyExportDao.queryUserStrategyExportByUId("7099805509645357056");
         logger.info("测试结果：{}", JSON.toJSONString(userStrategyExport));
     }
 

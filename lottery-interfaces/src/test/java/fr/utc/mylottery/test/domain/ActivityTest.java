@@ -3,11 +3,14 @@ package fr.utc.mylottery.test.domain;
 import com.alibaba.fastjson.JSON;
 import fr.utc.mylottery.common.Constants;
 import fr.utc.mylottery.domain.activity.model.aggregates.ActivityConfigRich;
-import fr.utc.mylottery.domain.activity.model.req.ActivityConfigReq;
+import fr.utc.mylottery.domain.activity.model.req.ActivityDeployReq;
+import fr.utc.mylottery.domain.activity.model.req.PartakeReq;
+import fr.utc.mylottery.domain.activity.model.res.PartakeResult;
 import fr.utc.mylottery.domain.activity.model.vo.ActivityVO;
 import fr.utc.mylottery.domain.activity.model.vo.AwardVO;
 import fr.utc.mylottery.domain.activity.model.vo.StrategyDetailVO;
 import fr.utc.mylottery.domain.activity.model.vo.StrategyVO;
+import fr.utc.mylottery.domain.activity.service.partake.IActivityPartake;
 import fr.utc.mylottery.domain.activity.service.stateflow.IStateHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,10 +41,9 @@ public class ActivityTest {
     private IStateHandler stateHandler;
 
     private ActivityConfigRich activityConfigRich;
+    @Resource
+    private IActivityPartake activityPartake;
 
-    /**
-     * TODO：后面编写ID生成策略
-     */
     private final Long activityId = 120981321L;
 
     @Before
@@ -157,7 +159,7 @@ public class ActivityTest {
 
     @Test
     public void test_createActivity() {
-        activityDeploy.createActivity(new ActivityConfigReq(activityId, activityConfigRich));
+        activityDeploy.createActivity(new ActivityDeployReq(activityId, activityConfigRich));
     }
 
     @Test
@@ -171,4 +173,12 @@ public class ActivityTest {
         logger.info("活动关闭，测试：{}",JSON.toJSONString(stateHandler.close(100001L,Constants.ActivityState.DOING)));
         logger.info("编辑活动，测试：{}",JSON.toJSONString(stateHandler.edit(100001L,Constants.ActivityState.CLOSE)));
     }
+    @Test
+    public void test_activityPartake() {
+        PartakeReq req = new PartakeReq("Uhdgkw766120d", 100001L);
+        PartakeResult res = activityPartake.doPartake(req);
+        logger.info("请求参数：{}", JSON.toJSONString(req));
+        logger.info("测试结果：{}", JSON.toJSONString(res));
+    }
+
 }

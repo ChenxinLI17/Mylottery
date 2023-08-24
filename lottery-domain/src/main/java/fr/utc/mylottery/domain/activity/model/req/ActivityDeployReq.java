@@ -2,17 +2,17 @@ package fr.utc.mylottery.domain.activity.model.req;
 
 import fr.utc.mylottery.domain.activity.model.aggregates.ActivityConfigRich;
 
-public class ActivityConfigReq {
+public class ActivityDeployReq {
     /** 活动ID */
     private Long activityId;
 
     /** 活动配置信息 */
     private ActivityConfigRich activityConfigRich;
 
-    public ActivityConfigReq() {
+    public ActivityDeployReq() {
     }
 
-    public ActivityConfigReq(Long activityId, ActivityConfigRich activityConfigRich) {
+    public ActivityDeployReq(Long activityId, ActivityConfigRich activityConfigRich) {
         this.activityId = activityId;
         this.activityConfigRich = activityConfigRich;
     }

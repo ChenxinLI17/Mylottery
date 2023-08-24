@@ -7,12 +7,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 /**
  * @description: algorithm snowflake
@@ -24,9 +20,8 @@ public class SnowFlake implements IIdGenerator {
     private Logger logger = LoggerFactory.getLogger(SnowFlake.class);
     /**
      * starting timestamp : 2023-05-27  00:00:00
-     */
-    //LocalDateTime dateTime = LocalDateTime.of(2023, 5, 27, 0, 0, 0);
-    //private final long startTimestamp = dateTime.toEpochSecond(ZoneOffset.UTC);
+     * LocalDateTime dateTime = LocalDateTime.of(2023, 5, 27, 0, 0, 0);
+       private final long startTimestamp = dateTime.toEpochSecond(ZoneOffset.UTC);
     /**
      *  timestamp : 41 bits
      *  dataCenterIdBits : 5 bits

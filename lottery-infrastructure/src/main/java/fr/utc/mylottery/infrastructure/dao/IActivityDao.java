@@ -30,4 +30,10 @@ public interface IActivityDao {
      */
     int alterState(@Param("activityId") Long activityId, @Param("beforeState") Integer beforeState, @Param("afterState")Integer afterState);
 
+    /**
+     * 扣减活动库存
+     * @param activityId 活动ID
+     * @return 更新数量
+     */
+    int subtractionActivityStock(Long activityId);
 }

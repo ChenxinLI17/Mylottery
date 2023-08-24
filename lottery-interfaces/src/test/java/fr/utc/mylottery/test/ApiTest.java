@@ -1,7 +1,6 @@
 package fr.utc.mylottery.test;
 
 import com.alibaba.fastjson.JSON;
-import fr.utc.mylottery.domain.activity.model.vo.AlterStateVO;
 import fr.utc.mylottery.infrastructure.dao.IActivityDao;
 import fr.utc.mylottery.infrastructure.po.Activity;
 import org.junit.Test;

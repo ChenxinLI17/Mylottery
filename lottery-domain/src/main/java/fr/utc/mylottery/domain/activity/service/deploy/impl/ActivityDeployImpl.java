@@ -2,7 +2,7 @@ package fr.utc.mylottery.domain.activity.service.deploy.impl;
 
 import com.alibaba.fastjson.JSON;
 import fr.utc.mylottery.domain.activity.model.aggregates.ActivityConfigRich;
-import fr.utc.mylottery.domain.activity.model.req.ActivityConfigReq;
+import fr.utc.mylottery.domain.activity.model.req.ActivityDeployReq;
 import fr.utc.mylottery.domain.activity.model.vo.ActivityVO;
 import fr.utc.mylottery.domain.activity.model.vo.AwardVO;
 import fr.utc.mylottery.domain.activity.model.vo.StrategyDetailVO;
@@ -18,15 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-@Service
-public class ActivityDeploy implements IActivityDeploy {
 
-    private Logger logger= LoggerFactory.getLogger(ActivityDeploy.class);
+/**
+ * @description: 部署活动服务
+ */
+@Service
+public class ActivityDeployImpl implements IActivityDeploy {
+
+    private Logger logger= LoggerFactory.getLogger(ActivityDeployImpl.class);
     @Resource
     private IActivityRepository activityRepository;
     @Transactional(rollbackFor = Exception.class)//回滚事务
     @Override
-    public void createActivity(ActivityConfigReq req) {
+    public void createActivity(ActivityDeployReq req) {
         logger.info("创建活动配置开始，activityId:{}",req.getActivityId());
         ActivityConfigRich activityConfigRich = req.getActivityConfigRich();
         try {
@@ -50,7 +54,7 @@ public class ActivityDeploy implements IActivityDeploy {
     }
 
     @Override
-    public void updateActivity(ActivityConfigReq req) {
+    public void updateActivity(ActivityDeployReq req) {
 
     }
 }

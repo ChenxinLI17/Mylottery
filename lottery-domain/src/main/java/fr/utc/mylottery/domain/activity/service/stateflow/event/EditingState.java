@@ -2,10 +2,7 @@ package fr.utc.mylottery.domain.activity.service.stateflow.event;
 
 import fr.utc.mylottery.common.Constants;
 import fr.utc.mylottery.common.Result;
-import fr.utc.mylottery.domain.activity.service.deploy.impl.ActivityDeploy;
 import fr.utc.mylottery.domain.activity.service.stateflow.AbstractState;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
