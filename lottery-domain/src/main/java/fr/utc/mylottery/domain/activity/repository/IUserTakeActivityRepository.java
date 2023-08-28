@@ -36,7 +36,7 @@ public interface IUserTakeActivityRepository {
      * @param takeDate          领取时间
      * @param takeId            领取ID
      */
-    void takeActivity(Long activityId, String activityName, Integer takeCount, Integer userTakeLeftCount, String uId, Date takeDate, Long takeId);
+    void takeActivity(Long activityId, String activityName, Long strategyId, Integer takeCount, Integer userTakeLeftCount, String uId, Date takeDate, Long takeId);
 
     /**
      * 锁定活动领取记录

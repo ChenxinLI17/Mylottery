@@ -41,7 +41,6 @@ public class UserStrategyExportDaoTest {
         userStrategyExport.setOrderId(order_id);
         userStrategyExport.setStrategyId(10001L);
         userStrategyExport.setStrategyMode(Constants.StrategyMode.SINGLE.getCode());
-        userStrategyExport.setGrantType(1);
         userStrategyExport.setGrantDate(new Date());
         userStrategyExport.setGrantState(1);
         userStrategyExport.setAwardId("1");
@@ -55,7 +54,7 @@ public class UserStrategyExportDaoTest {
 
     @Test
     public void test_select() {
-        UserStrategyExport userStrategyExport = userStrategyExportDao.queryUserStrategyExportByUId("7099805509645357056");
+        UserStrategyExport userStrategyExport = userStrategyExportDao.queryUserStrategyExportByUId("Uhdgkw766120d");
         logger.info("测试结果：{}", JSON.toJSONString(userStrategyExport));
     }
 

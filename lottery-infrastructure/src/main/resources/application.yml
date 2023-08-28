@@ -8,7 +8,7 @@ mini-db-router:
       dbCount: 3
       tbCount: 3
       default: db00
-      routerKey: order_Id
+      routerKey: uId
       list: db01,db02,db03
       db00:
         driver-class-name: com.mysql.jdbc.Driver

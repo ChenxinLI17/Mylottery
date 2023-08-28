@@ -91,7 +91,12 @@
             <artifactId>lottery-dbrouter</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency> <dependency>
+            <groupId>fr.utc.mylottery.application</groupId>
+            <artifactId>lottery-application</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
+
         <!-- AspectJ Runtime -->
         <dependency>
             <groupId>org.aspectj</groupId>

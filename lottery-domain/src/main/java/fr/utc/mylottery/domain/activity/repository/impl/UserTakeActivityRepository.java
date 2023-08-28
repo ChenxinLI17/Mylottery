@@ -43,13 +43,14 @@ public class UserTakeActivityRepository implements IUserTakeActivityRepository {
     }
 
     @Override
-    public void takeActivity(Long activityId, String activityName, Integer takeCount, Integer userTakeLeftCount, String uId, Date takeDate, Long takeId) {
+    public void takeActivity(Long activityId, String activityName, Long strategyId, Integer takeCount, Integer userTakeLeftCount, String uId, Date takeDate, Long takeId) {
         UserTakeActivity userTakeActivity = new UserTakeActivity();
         userTakeActivity.setuId(uId);
         userTakeActivity.setTakeId(takeId);
         userTakeActivity.setActivityId(activityId);
         userTakeActivity.setActivityName(activityName);
         userTakeActivity.setTakeDate(takeDate);
+        userTakeActivity.setStrategyId(strategyId);
         if (null == userTakeLeftCount) {
             userTakeActivity.setTakeCount(1);
         } else {
@@ -77,7 +78,6 @@ public class UserTakeActivityRepository implements IUserTakeActivityRepository {
         userStrategyExport.setOrderId(drawOrder.getOrderId());
         userStrategyExport.setStrategyId(drawOrder.getStrategyId());
         userStrategyExport.setStrategyMode(drawOrder.getStrategyMode());
-        userStrategyExport.setGrantType(drawOrder.getGrantType());
         userStrategyExport.setGrantDate(drawOrder.getGrantDate());
         userStrategyExport.setGrantState(drawOrder.getGrantState());
         userStrategyExport.setAwardId(drawOrder.getAwardId());

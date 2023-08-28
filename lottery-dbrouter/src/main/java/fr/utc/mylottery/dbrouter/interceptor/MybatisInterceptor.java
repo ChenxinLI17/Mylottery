@@ -60,6 +60,9 @@ public class MybatisInterceptor implements Interceptor {
             }
         }
         logger.info("method {},{}", targetMethod.getName(), targetMethod.isAnnotationPresent(DBRouter.class));
+        if (targetMethod.getName().contains("TakeActivity")){
+            return invocation.proceed();
+        }
         if (targetMethod != null && targetMethod.isAnnotationPresent(DBRouter.class)) {
             // 执行动态表名替换逻辑
             // 获取SQL

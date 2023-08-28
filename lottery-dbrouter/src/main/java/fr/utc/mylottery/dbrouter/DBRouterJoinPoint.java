@@ -55,7 +55,9 @@ public class DBRouterJoinPoint {
         if (StringUtils.isBlank(dbKey) && StringUtils.isBlank(dbRouterConfig.getRouterKey())) {
             throw new RuntimeException("annotation DBRouter key is null！");
         }
+        logger.info("dbKey:{}, dbConfig:{}",dbKey,dbRouterConfig.getRouterKey());
         dbKey = StringUtils.isNotBlank(dbKey) ? dbKey : dbRouterConfig.getRouterKey();
+        logger.info("dbKey:{}",dbKey);
         // 路由属性
         String dbKeyAttr = getAttrValue(dbKey, jp.getArgs());
 
@@ -89,6 +91,7 @@ public class DBRouterJoinPoint {
                     break;
                 }
                 filedValue = BeanUtils.getProperty(arg, attr);
+                logger.info("获取路由属性值 attr：{}",attr);
             } catch (Exception e) {
                 logger.error("获取路由属性值失败 attr：{}", attr, e);
             }

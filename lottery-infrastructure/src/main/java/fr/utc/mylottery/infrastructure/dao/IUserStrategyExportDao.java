@@ -7,18 +7,19 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface IUserStrategyExportDao {
+
     /**
      * 新增数据
      * @param userStrategyExport 用户策略
      */
-    @DBRouter(key = "orderId")
+    @DBRouter
     void insert(UserStrategyExport userStrategyExport);
 
     /**
      * 查询数据
-     * @param uId 用户ID
+     * @param orderId
      * @return 用户策略
      */
     @DBRouter
-    UserStrategyExport queryUserStrategyExportByUId(String uId);
+    UserStrategyExport queryUserStrategyExportByUId(String orderId);
 }

@@ -2,6 +2,7 @@ package fr.utc.mylottery.domain.activity.repository.impl;
 
 
 import fr.utc.mylottery.common.Constants;
+import fr.utc.mylottery.dbrouter.strategy.IDBRouterStrategy;
 import fr.utc.mylottery.domain.activity.model.req.PartakeReq;
 import fr.utc.mylottery.domain.activity.model.vo.*;
 import fr.utc.mylottery.domain.activity.repository.IActivityRepository;
@@ -29,6 +30,8 @@ public class ActivityRepository implements IActivityRepository {
     private IStrategyDetailDao strategyDetailDao;
     @Resource
     private IUserTakeActivityCountDao userTakeActivityCountDao;
+    @Resource
+    private IDBRouterStrategy dbRouterStrategy;
     private Logger logger = LoggerFactory.getLogger(ActivityRepository.class);
 
     @Override
@@ -83,11 +86,14 @@ public class ActivityRepository implements IActivityRepository {
         // 查询活动信息
         Activity activity = activityDao.queryActivityById(req.getActivityId());
 
+        dbRouterStrategy.doRouter(req.getuId());
         // 查询领取次数
         UserTakeActivityCount userTakeActivityCountReq = new UserTakeActivityCount();
         userTakeActivityCountReq.setuId(req.getuId());
         userTakeActivityCountReq.setActivityId(req.getActivityId());
         UserTakeActivityCount userTakeActivityCount = userTakeActivityCountDao.queryUserTakeActivityCount(userTakeActivityCountReq);
+
+        dbRouterStrategy.clear();
 
         // 封装结果信息
         ActivityBillVO activityBillVO = new ActivityBillVO();

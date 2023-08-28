@@ -6,9 +6,9 @@ import fr.utc.mylottery.dbrouter.strategy.IDBRouterStrategy;
 import fr.utc.mylottery.domain.activity.model.req.PartakeReq;
 import fr.utc.mylottery.domain.activity.model.vo.ActivityBillVO;
 import fr.utc.mylottery.domain.activity.model.vo.DrawOrderVO;
+import fr.utc.mylottery.domain.activity.model.vo.UserTakeActivityVO;
 import fr.utc.mylottery.domain.activity.repository.IUserTakeActivityRepository;
 import fr.utc.mylottery.domain.activity.service.partake.BaseActivityPartake;
-import fr.utc.mylottery.domain.support.ids.IIdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 @Service
 public class ActivityPartakeImpl extends BaseActivityPartake {
@@ -26,13 +25,20 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
     private IUserTakeActivityRepository userTakeActivityRepository;
 
     @Resource
-    private Map<Constants.Ids, IIdGenerator> idGeneratorMap;
-
-    @Resource
     private TransactionTemplate transactionTemplate;
 
     @Resource
     private IDBRouterStrategy dbRouterStrategy;
+
+    @Override
+    protected UserTakeActivityVO queryNoConsumedTakeActivityOrder(Long activityId, String uId) {
+        try{
+            dbRouterStrategy.doRouter(uId);
+            return userTakeActivityRepository.queryNoConsumedTakeActivityOrder(activityId, uId);
+        }finally {
+            dbRouterStrategy.clear();
+        }
+    }
 
     @Override
     protected Result checkActivityBill(PartakeReq partake, ActivityBillVO bill) {
@@ -73,58 +79,34 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
         }
         return Result.buildSuccessResult();
     }
+    @Override
+    protected Result grabActivity(PartakeReq partake, ActivityBillVO bill, Long takeId) {
+        try {
+            dbRouterStrategy.doRouter(partake.getuId());
+            return transactionTemplate.execute(status -> {
+                try {
+                    // 扣减个人已参与次数
+                    int updateCount = userTakeActivityRepository.subtractionLeftCount(bill.getActivityId(), bill.getActivityName(), bill.getTakeCount(), bill.getUserTakeLeftCount(), partake.getuId(), partake.getPartakeDate());
+                    if (0 == updateCount) {
+                        status.setRollbackOnly();
+                        logger.error("领取活动，扣减个人已参与次数失败 activityId：{} uId：{}", partake.getActivityId(), partake.getuId());
+                        return Result.buildResult(Constants.ResponseCode.NO_UPDATE);
+                    }
 
-//    @Override
-//    protected Result grabActivity(PartakeReq partake, ActivityBillVO bill) {
-//        try {
-//            dbRouterStrategy.doRouter(partake.getuId());
-//            return transactionTemplate.execute(status -> {
-//                try {
-//                    // 扣减个人已参与次数
-//                    int updateCount = userTakeActivityRepository.subtractionLeftCount(bill.getActivityId(), bill.getActivityName(), bill.getTakeCount(), bill.getUserTakeLeftCount(), partake.getuId(), partake.getPartakeDate());
-//                    if (0 == updateCount) {
-//                        status.setRollbackOnly();
-//                        logger.error("领取活动，扣减个人已参与次数失败 activityId：{} uId：{}", partake.getActivityId(), partake.getuId());
-//                        return Result.buildResult(Constants.ResponseCode.NO_UPDATE);
-//                    }
-//
-//                    // 插入领取活动信息
-//                    Long takeId = idGeneratorMap.get(Constants.Ids.SnowFlake).nextId();
-//                    userTakeActivityRepository.takeActivity(bill.getActivityId(), bill.getActivityName(), bill.getTakeCount(), bill.getUserTakeLeftCount(), partake.getuId(), partake.getPartakeDate(), takeId);
-//                } catch (DuplicateKeyException e) {
-//                    status.setRollbackOnly();
-//                    logger.error("领取活动，唯一索引冲突 activityId：{} uId：{}", partake.getActivityId(), partake.getuId(), e);
-//                    return Result.buildResult(Constants.ResponseCode.INDEX_DUP);
-//                }
-//                return Result.buildSuccessResult();
-//            });
-//        } finally {
-//            dbRouterStrategy.clear();
-//        }
-//    }
-@Override
-protected Result grabActivity(PartakeReq partake, ActivityBillVO bill) {
-        return transactionTemplate.execute(status -> {
-            try {
-                // 扣减个人已参与次数
-                int updateCount = userTakeActivityRepository.subtractionLeftCount(bill.getActivityId(), bill.getActivityName(), bill.getTakeCount(), bill.getUserTakeLeftCount(), partake.getuId(), partake.getPartakeDate());
-                if (0 == updateCount) {
+                    // 写入领取活动记录
+                    userTakeActivityRepository.takeActivity(bill.getActivityId(), bill.getActivityName(), bill.getStrategyId(), bill.getTakeCount(), bill.getUserTakeLeftCount(), partake.getuId(), partake.getPartakeDate(), takeId);
+                } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
-                    logger.error("领取活动，扣减个人已参与次数失败 activityId：{} uId：{}", partake.getActivityId(), partake.getuId());
-                    return Result.buildResult(Constants.ResponseCode.NO_UPDATE);
+                    logger.error("领取活动，唯一索引冲突 activityId：{} uId：{}", partake.getActivityId(), partake.getuId(), e);
+                    return Result.buildResult(Constants.ResponseCode.INDEX_DUP);
                 }
+                return Result.buildSuccessResult();
+            });
+        } finally {
+            dbRouterStrategy.clear();
+        }
+    }
 
-                // 插入领取活动信息
-                Long takeId = idGeneratorMap.get(Constants.Ids.SnowFlake).nextId();
-                userTakeActivityRepository.takeActivity(bill.getActivityId(), bill.getActivityName(), bill.getTakeCount(), bill.getUserTakeLeftCount(), partake.getuId(), partake.getPartakeDate(), takeId);
-            } catch (DuplicateKeyException e) {
-                status.setRollbackOnly();
-                logger.error("领取活动，唯一索引冲突 activityId：{} uId：{}", partake.getActivityId(), partake.getuId(), e);
-                return Result.buildResult(Constants.ResponseCode.INDEX_DUP);
-            }
-            return Result.buildSuccessResult();
-        });
-}
     @Override
     public Result recordDrawOrder(DrawOrderVO drawOrder) {
         try {
@@ -153,4 +135,5 @@ protected Result grabActivity(PartakeReq partake, ActivityBillVO bill) {
         }
 
     }
+
 }

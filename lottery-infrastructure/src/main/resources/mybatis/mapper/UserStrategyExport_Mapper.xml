@@ -9,7 +9,6 @@
         <result column="order_id" property="orderId"/>
         <result column="strategy_id" property="strategyId"/>
         <result column="strategy_mode" property="strategyMode"/>
-        <result column="grant_type" property="grantType"/>
         <result column="grant_date" property="grantDate"/>
         <result column="grant_state" property="grantState"/>
         <result column="award_id" property="awardId"/>
@@ -24,19 +23,19 @@
     <insert id="insert" parameterType="fr.utc.mylottery.infrastructure.po.UserStrategyExport">
         INSERT INTO user_strategy_export
         (u_id, activity_id, order_id, strategy_id, strategy_mode,
-         grant_type, grant_date, grant_state, award_id, award_type,
+         grant_date, grant_state, award_id, award_type,
          award_name, award_content, uuid, create_time, update_time)
         VALUES
             (#{uId},#{activityId},#{orderId},#{strategyId},#{strategyMode},
-             #{grantType},#{grantDate},#{grantState},#{awardId},#{awardType},
+             #{grantDate},#{grantState},#{awardId},#{awardType},
              #{awardName},#{awardContent},#{uuid},now(),now())
     </insert>
     <select id="queryUserStrategyExportByUId" parameterType="java.lang.String" resultMap="userStrategyExportMap">
         SELECT id, u_id, activity_id, order_id, strategy_id, strategy_mode,
-               grant_type, grant_date, grant_state, award_id, award_type,
+               grant_date, grant_state, award_id, award_type,
                award_name, award_content, uuid, create_time, update_time
         FROM user_strategy_export
-        WHERE order_id = #{orderId}
+        WHERE u_id = #{uId}
     </select>
 
 
