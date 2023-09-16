@@ -79,15 +79,21 @@ public class ActivityRepository implements IActivityRepository {
         int count = activityDao.alterState(alterStateVO.getActivityId(),alterStateVO.getBeforeState(),alterStateVO.getAfterState());
         return 1 == count;
     }
+
+    @Override
+    public Long queryStrategyIdByActivityId(Long activityId) {
+        return activityDao.queryActivityById(activityId).getStrategyId();
+    }
+
     @Override
     public ActivityBillVO queryActivityBill(PartakeReq req) {
 
         logger.info("req.act:{}",req.getActivityId());
-        // 查询活动信息
+        /** 查询活动信息 */
         Activity activity = activityDao.queryActivityById(req.getActivityId());
 
         dbRouterStrategy.doRouter(req.getuId());
-        // 查询领取次数
+        /** 查询领取次数 */
         UserTakeActivityCount userTakeActivityCountReq = new UserTakeActivityCount();
         userTakeActivityCountReq.setuId(req.getuId());
         userTakeActivityCountReq.setActivityId(req.getActivityId());
@@ -95,7 +101,7 @@ public class ActivityRepository implements IActivityRepository {
 
         dbRouterStrategy.clear();
 
-        // 封装结果信息
+        /** 封装结果信息 */
         ActivityBillVO activityBillVO = new ActivityBillVO();
         activityBillVO.setuId(req.getuId());
         activityBillVO.setActivityId(req.getActivityId());

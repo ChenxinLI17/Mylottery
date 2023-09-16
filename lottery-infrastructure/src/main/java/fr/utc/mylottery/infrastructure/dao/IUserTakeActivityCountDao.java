@@ -18,7 +18,6 @@ public interface IUserTakeActivityCountDao {
      * 插入领取次数信息
      * @param userTakeActivityCount 请求入参
      */
-//    @DBRouter
     void insert(UserTakeActivityCount userTakeActivityCount);
 
     /**
@@ -26,7 +25,6 @@ public interface IUserTakeActivityCountDao {
      * @param userTakeActivityCount 请求入参
      * @return 更新数量
      */
-//    @DBRouter
     int updateLeftCount(UserTakeActivityCount userTakeActivityCount);
 
 }

@@ -8,6 +8,7 @@ import fr.utc.mylottery.domain.strategy.model.vo.DrawAwardInfo;
  */
 public class DrawProcessResult extends Result {
     private DrawAwardInfo drawAwardInfo;
+    private Integer userTakeLeftCount;
 
     public DrawProcessResult(String code, String info) {
         super(code,info);
@@ -18,11 +19,24 @@ public class DrawProcessResult extends Result {
         this.drawAwardInfo = drawAwardInfo;
     }
 
+    public DrawProcessResult(String code, String info, DrawAwardInfo drawAwardInfo, Integer userTakeLeftCount) {
+        super(code, info);
+        this.drawAwardInfo = drawAwardInfo;
+        this.userTakeLeftCount = userTakeLeftCount;
+    }
+
     public DrawAwardInfo getDrawAwardInfo() {
         return drawAwardInfo;
     }
 
     public void setDrawAwardInfo(DrawAwardInfo drawAwardInfo) {
         this.drawAwardInfo = drawAwardInfo;
+    }
+    public Integer getUserTakeLeftCount() {
+        return userTakeLeftCount;
+    }
+
+    public void setUserTakeLeftCount(Integer userTakeLeftCount) {
+        this.userTakeLeftCount = userTakeLeftCount;
     }
 }

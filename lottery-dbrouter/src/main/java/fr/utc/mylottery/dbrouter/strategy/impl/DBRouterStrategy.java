@@ -19,7 +19,7 @@ public class DBRouterStrategy implements IDBRouterStrategy {
     @Override
     public void doRouter(String dbKeyAttr) {
         int size = dbRouterConfig.getDbCount() * dbRouterConfig.getTbCount();
-        logger.info("dbKeyAttr:{}",dbKeyAttr);
+        //logger.info("dbKeyAttr:{}",dbKeyAttr);
         /** 哈希散列 + 扰动算法 结果总是0和8 */
         //int idx = (dbKeyAttr.hashCode() ^ (dbKeyAttr.hashCode() >>> 16)) & (size-1);
         /** 哈希散列 结果总是0和8 */
@@ -31,7 +31,7 @@ public class DBRouterStrategy implements IDBRouterStrategy {
         int dbIdx = idx / dbRouterConfig.getTbCount() + 1;
         int tbIdx = idx - dbRouterConfig.getTbCount() * (dbIdx - 1) + 1;
 
-        logger.info("id :{},库：{} ,表：{}",idx,String.format("%02d", dbIdx),String.format("%03d", tbIdx));
+        //logger.info("id :{},库：{} ,表：{}",idx,String.format("%02d", dbIdx),String.format("%03d", tbIdx));
         // 设置到 ThreadLocal
         DBContext.setDBKey(String.format("%02d", dbIdx));
         DBContext.setTBKey(String.format("%03d", tbIdx));

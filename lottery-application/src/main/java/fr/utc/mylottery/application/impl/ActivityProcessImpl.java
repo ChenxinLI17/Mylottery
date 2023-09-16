@@ -41,6 +41,7 @@ public class ActivityProcessImpl implements IActivityProcess {
         }
         Long strategyId = partakeResult.getStrategyId();
         Long takeId = partakeResult.getTakeId();
+        Integer userTakeLeftCount = partakeResult.getUserTakeLeftCount();
 
         // 2. 执行抽奖
         DrawResult drawResult = drawExec.doDrawExec(new DrawReq(req.getuId(), strategyId, takeId));
@@ -55,7 +56,7 @@ public class ActivityProcessImpl implements IActivityProcess {
         // 4. 发送MQ，触发发奖流程
 
         // 5. 返回结果
-        return new DrawProcessResult(Constants.ResponseCode.SUCCESS.getCode(), Constants.ResponseCode.SUCCESS.getInfo(), drawAwardInfo);
+        return new DrawProcessResult(Constants.ResponseCode.SUCCESS.getCode(), Constants.ResponseCode.SUCCESS.getInfo(), drawAwardInfo,userTakeLeftCount-1);
     }
 
     private DrawOrderVO buildDrawOrderVO(DrawProcessReq req, Long strategyId, Long takeId, DrawAwardInfo drawAwardInfo) {

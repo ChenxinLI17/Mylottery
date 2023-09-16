@@ -4,6 +4,7 @@ import fr.utc.mylottery.common.Constants;
 import fr.utc.mylottery.common.Result;
 import fr.utc.mylottery.dbrouter.strategy.IDBRouterStrategy;
 import fr.utc.mylottery.domain.activity.model.req.PartakeReq;
+import fr.utc.mylottery.domain.activity.model.res.GrabResult;
 import fr.utc.mylottery.domain.activity.model.vo.ActivityBillVO;
 import fr.utc.mylottery.domain.activity.model.vo.DrawOrderVO;
 import fr.utc.mylottery.domain.activity.model.vo.UserTakeActivityVO;
@@ -54,7 +55,6 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
             return Result.buildResult(Constants.ResponseCode.UN_ERROR, "活动时间范围非可用");
         }
 
-        logger.info("bill count{}",bill.getStockSurplusCount());
         // 校验：活动库存
         if (bill.getStockSurplusCount() <= 0) {
             logger.warn("活动剩余库存非可用 stockSurplusCount：{}", bill.getStockSurplusCount());
@@ -64,7 +64,7 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
         // 校验：个人库存 - 个人活动剩余可领取次数
         if (bill.getUserTakeLeftCount() != null && bill.getUserTakeLeftCount() <= 0) {
             logger.warn("个人领取次数非可用 userTakeLeftCount：{}", bill.getUserTakeLeftCount());
-            return Result.buildResult(Constants.ResponseCode.UN_ERROR, "个人领取次数非可用");
+            return Result.buildResult(Constants.ResponseCode.UN_ERROR, "个人领取次数已用完");
         }
 
         return Result.buildSuccessResult();
@@ -80,7 +80,7 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
         return Result.buildSuccessResult();
     }
     @Override
-    protected Result grabActivity(PartakeReq partake, ActivityBillVO bill, Long takeId) {
+    protected GrabResult grabActivity(PartakeReq partake, ActivityBillVO bill, Long takeId) {
         try {
             dbRouterStrategy.doRouter(partake.getuId());
             return transactionTemplate.execute(status -> {
@@ -90,17 +90,17 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
                     if (0 == updateCount) {
                         status.setRollbackOnly();
                         logger.error("领取活动，扣减个人已参与次数失败 activityId：{} uId：{}", partake.getActivityId(), partake.getuId());
-                        return Result.buildResult(Constants.ResponseCode.NO_UPDATE);
+                        return new GrabResult(Result.buildResult(Constants.ResponseCode.NO_UPDATE),-1);
                     }
 
                     // 写入领取活动记录
                     userTakeActivityRepository.takeActivity(bill.getActivityId(), bill.getActivityName(), bill.getStrategyId(), bill.getTakeCount(), bill.getUserTakeLeftCount(), partake.getuId(), partake.getPartakeDate(), takeId);
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
-                    logger.error("领取活动，唯一索引冲突 activityId：{} uId：{}", partake.getActivityId(), partake.getuId(), e);
-                    return Result.buildResult(Constants.ResponseCode.INDEX_DUP);
+                    logger.error("领取活动，唯一索引冲突 activityId：{} uId：{}", partake.getActivityId(), partake.getuId());
+                    return new GrabResult(Result.buildResult(Constants.ResponseCode.INDEX_DUP),-1);
                 }
-                return Result.buildSuccessResult();
+                return new GrabResult(Constants.ResponseCode.SUCCESS.getCode(), Constants.ResponseCode.SUCCESS.getInfo(),bill.getUserTakeLeftCount());
             });
         } finally {
             dbRouterStrategy.clear();

@@ -3,6 +3,7 @@ package fr.utc.mylottery.domain.activity.service.partake;
 import fr.utc.mylottery.common.Constants;
 import fr.utc.mylottery.common.Result;
 import fr.utc.mylottery.domain.activity.model.req.PartakeReq;
+import fr.utc.mylottery.domain.activity.model.res.GrabResult;
 import fr.utc.mylottery.domain.activity.model.res.PartakeResult;
 import fr.utc.mylottery.domain.activity.model.vo.ActivityBillVO;
 import fr.utc.mylottery.domain.activity.model.vo.UserTakeActivityVO;
@@ -28,7 +29,7 @@ public abstract class BaseActivityPartake implements IActivityPartake{
         // 1. 查询是否存在未执行抽奖领取活动单【user_take_activity 存在 state = 0，领取了但抽奖过程失败的，可以直接返回领取结果继续抽奖】
         UserTakeActivityVO userTakeActivityVO = this.queryNoConsumedTakeActivityOrder(req.getActivityId(), req.getuId());
         if (null != userTakeActivityVO) {
-            return buildPartakeResult(userTakeActivityVO.getStrategyId(), userTakeActivityVO.getTakeId());
+            return buildPartakeResult(userTakeActivityVO.getStrategyId(), userTakeActivityVO.getTakeId(),-1);
         }
         // 查询活动账单
         ActivityBillVO activityBillVO = this.queryActivityBill(req);
@@ -45,14 +46,14 @@ public abstract class BaseActivityPartake implements IActivityPartake{
             return new PartakeResult(subtractionActivityResult.getCode(), subtractionActivityResult.getInfo());
         }
 
-        // 领取活动信息【个人用户把活动信息写入到用户表】
+        // 领取活动信息 user_take_activity_count中扣减left_count字段，在user_take_activity中插入领取活动的记录
         Long takeId = idGeneratorMap.get(Constants.Ids.SnowFlake).nextId();
-        Result grabResult = this.grabActivity(req, activityBillVO, takeId);
+        GrabResult grabResult = this.grabActivity(req, activityBillVO, takeId);
         if (!Constants.ResponseCode.SUCCESS.getCode().equals(grabResult.getCode())) {
             return new PartakeResult(grabResult.getCode(), grabResult.getInfo());
         }
 
-        return buildPartakeResult(activityBillVO.getStrategyId(), takeId);
+        return buildPartakeResult(activityBillVO.getStrategyId(), takeId, grabResult.getUserTakeLeftCount());
     }
     /**
      * 封装结果【返回的策略ID，用于继续完成抽奖步骤】
@@ -61,10 +62,11 @@ public abstract class BaseActivityPartake implements IActivityPartake{
      * @param takeId     领取ID
      * @return 封装结果
      */
-    private PartakeResult buildPartakeResult(Long strategyId, Long takeId) {
+    private PartakeResult buildPartakeResult(Long strategyId, Long takeId, Integer userTakeLeftCount) {
         PartakeResult partakeResult = new PartakeResult(Constants.ResponseCode.SUCCESS.getCode(), Constants.ResponseCode.SUCCESS.getInfo());
         partakeResult.setStrategyId(strategyId);
         partakeResult.setTakeId(takeId);
+        partakeResult.setUserTakeLeftCount(userTakeLeftCount);
         return partakeResult;
     }
 
@@ -102,6 +104,6 @@ public abstract class BaseActivityPartake implements IActivityPartake{
      * @param bill    活动账单
      * @return 领取结果
      */
-    protected abstract Result grabActivity(PartakeReq partake, ActivityBillVO bill,Long takeId);
+    protected abstract GrabResult grabActivity(PartakeReq partake, ActivityBillVO bill,Long takeId);
 
 }

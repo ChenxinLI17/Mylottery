@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 # 多数据源路由配置
 mini-db-router:
@@ -35,13 +35,13 @@ mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
   config-location:  classpath:/mybatis/config/mybatis-config.xml
 
-# Dubbo 广播方式配置
+# Dubbo zookeeper注册中心方式配置
 dubbo:
   application:
     name: Lottery
     version: 1.0.0
   registry:
-    address: N/A #multicast://224.5.6.7:1234
+    address: zookeeper://127.0.0.1:2181
   protocol:
     name: dubbo
     port: 20880

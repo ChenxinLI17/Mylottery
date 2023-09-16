@@ -96,7 +96,7 @@ public class SnowFlake implements IIdGenerator {
             sequence = 0L;
         }
         lastTimestamp = timestamp;
-        logger.info("time: {},datacenterId: {},workerId: {}, seq: {}",timestamp,dataCenterId,workerId,sequence);
+        //logger.info("time: {},datacenterId: {},workerId: {}, seq: {}",timestamp,dataCenterId,workerId,sequence);
         return (timestamp << timestampLeftShirt)
                 | (dataCenterId << dataCenterIdShift)
                 | (workerId << workerIdShift)

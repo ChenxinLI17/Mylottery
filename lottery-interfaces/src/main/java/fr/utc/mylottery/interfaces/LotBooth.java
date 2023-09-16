@@ -5,7 +5,6 @@ import fr.utc.mylottery.common.Result;
 import fr.utc.mylottery.domain.strategy.model.req.DrawReq;
 import fr.utc.mylottery.domain.strategy.model.res.DrawResult;
 import fr.utc.mylottery.domain.strategy.service.draw.IDrawExec;
-import fr.utc.mylottery.rpc.IActivityBooth;
 import fr.utc.mylottery.rpc.ILotBooth;
 import fr.utc.mylottery.rpc.dto.LotDto;
 import fr.utc.mylottery.rpc.req.LotReq;

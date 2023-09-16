@@ -59,7 +59,7 @@ public class MybatisInterceptor implements Interceptor {
                 break;
             }
         }
-        logger.info("method {},{}", targetMethod.getName(), targetMethod.isAnnotationPresent(DBRouter.class));
+        //logger.info("method {},{}", targetMethod.getName(), targetMethod.isAnnotationPresent(DBRouter.class));
         if (targetMethod.getName().contains("TakeActivity")){
             return invocation.proceed();
         }
@@ -68,7 +68,7 @@ public class MybatisInterceptor implements Interceptor {
             // 获取SQL
             BoundSql boundSql = statementHandler.getBoundSql();
             String sql = boundSql.getSql();
-            logger.info("sql:{}", sql);
+            //logger.info("sql:{}", sql);
 
             // 替换SQL表名
             Matcher matcher = pattern.matcher(sql);
@@ -77,7 +77,7 @@ public class MybatisInterceptor implements Interceptor {
                 tableName = matcher.group().trim();
             }
             assert null != tableName;
-            logger.info("? :{}", DBContext.getTBKey());
+            //logger.info("? :{}", DBContext.getTBKey());
             String replaceSql = matcher.replaceAll(tableName + "_" + DBContext.getTBKey());
 
             // 通过反射修改SQL语句

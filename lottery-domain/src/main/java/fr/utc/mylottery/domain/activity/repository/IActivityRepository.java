@@ -50,7 +50,10 @@ public interface IActivityRepository {
      * @return              更新结果
      */
     boolean alterStatus(Long activityId, Enum<Constants.ActivityState> beforeState, Enum<Constants.ActivityState> afterState);
-
+    /**
+     * 查询活动的策略
+     */
+    Long queryStrategyIdByActivityId(Long activityId);
     /**
      * 查询活动账单信息【库存、状态、日期、个人参与次数】
      * @param req 参与活动请求
