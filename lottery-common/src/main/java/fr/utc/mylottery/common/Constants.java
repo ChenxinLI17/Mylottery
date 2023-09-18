@@ -7,7 +7,10 @@ public class Constants {
         ILLEGAL_PARAMETER("0002","非法参数"),
         INDEX_DUP("0003","重复领取活动"),
         NO_UPDATE("0004","SQL操作无更新"),
-        LOSING_DRAW("D001", "未中奖");
+        LOSING_DRAW("D001", "未中奖"),
+        NOT_CONSUMED_TAKE("D003", "未消费活动领取记录"),
+        OUT_OF_STOCK("D004", "活动无库存"),
+        ERR_TOKEN("D005", "分布式锁失败");
 
         private String code;
         private String info;
@@ -286,6 +289,52 @@ public class Constants {
         public void setInfo(String info) {
             this.info = info;
         }
+    }
+    public enum MQState {
+        INIT(0, "初始"),
+        COMPLETE(1, "完成"),
+        FAIL(2, "失败");
+
+        private Integer code;
+        private String info;
+
+        MQState(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
+        }
+    }
+    public static final class RedisKey {
+
+        // 抽奖活动库存 Key
+        private static final String LOTTERY_ACTIVITY_STOCK_COUNT = "lottery_activity_stock_count_";
+
+        public static String KEY_LOTTERY_ACTIVITY_STOCK_COUNT(Long activityId) {
+            return LOTTERY_ACTIVITY_STOCK_COUNT + activityId;
+        }
+
+        // 抽奖活动库存锁 Key
+        private static final String LOTTERY_ACTIVITY_STOCK_COUNT_TOKEN = "lottery_activity_stock_count_token_";
+
+        public static String KEY_LOTTERY_ACTIVITY_STOCK_COUNT_TOKEN(Long activityId, Integer stockUsedCount) {
+            return LOTTERY_ACTIVITY_STOCK_COUNT_TOKEN + activityId + "_" + stockUsedCount;
+        }
+
     }
 
 

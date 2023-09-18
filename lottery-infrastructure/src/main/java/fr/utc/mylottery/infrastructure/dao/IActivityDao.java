@@ -34,4 +34,10 @@ public interface IActivityDao {
      * @return 更新数量
      */
     int subtractionActivityStock(Long activityId);
+
+    /**
+     * 更新用户领取活动后，活动库存
+     * @param activity  入参
+     */
+    void updateActivityStock(Activity activity);
 }

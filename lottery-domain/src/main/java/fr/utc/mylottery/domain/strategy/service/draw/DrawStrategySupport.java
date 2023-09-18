@@ -12,7 +12,6 @@ public class DrawStrategySupport extends DrawConfig{
 
     /**
      * 查询策略配置信息
-     *
      * @param strategyId 策略ID
      * @return 策略配置信息
      */
@@ -22,7 +21,6 @@ public class DrawStrategySupport extends DrawConfig{
 
     /**
      * 查询奖品详情信息
-     *
      * @param awardId 奖品ID
      * @return 中奖详情
      */

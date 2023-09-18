@@ -30,4 +30,5 @@ public class ActivityProcessTest {
         logger.info("请求入参：{}", JSON.toJSONString(req));
         logger.info("测试结果：{}", JSON.toJSONString(drawProcessResult));
     }
+
 }

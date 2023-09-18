@@ -5,7 +5,9 @@ import fr.utc.mylottery.common.Result;
 import fr.utc.mylottery.dbrouter.strategy.IDBRouterStrategy;
 import fr.utc.mylottery.domain.activity.model.req.PartakeReq;
 import fr.utc.mylottery.domain.activity.model.res.GrabResult;
+import fr.utc.mylottery.domain.activity.model.res.StockResult;
 import fr.utc.mylottery.domain.activity.model.vo.ActivityBillVO;
+import fr.utc.mylottery.domain.activity.model.vo.ActivityPartakeVO;
 import fr.utc.mylottery.domain.activity.model.vo.DrawOrderVO;
 import fr.utc.mylottery.domain.activity.model.vo.UserTakeActivityVO;
 import fr.utc.mylottery.domain.activity.repository.IUserTakeActivityRepository;
@@ -80,16 +82,24 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
         return Result.buildSuccessResult();
     }
     @Override
+    protected StockResult subtractionActivityStockByRedis(String uId, Long activityId, Integer stockCount) {
+        return activityRepository.subtractionActivityStockByRedis(uId, activityId, stockCount);
+    }
+    @Override
+    protected void recoverActivityCacheStockByRedis(Long activityId, String tokenKey, String code) {
+        activityRepository.recoverActivityCacheStockByRedis(activityId, tokenKey, code);
+    }
+    @Override
     protected GrabResult grabActivity(PartakeReq partake, ActivityBillVO bill, Long takeId) {
         try {
             dbRouterStrategy.doRouter(partake.getuId());
             return transactionTemplate.execute(status -> {
                 try {
-                    // 扣减个人已参与次数
+                    // 扣减个人剩余的活动参与次数
                     int updateCount = userTakeActivityRepository.subtractionLeftCount(bill.getActivityId(), bill.getActivityName(), bill.getTakeCount(), bill.getUserTakeLeftCount(), partake.getuId(), partake.getPartakeDate());
                     if (0 == updateCount) {
                         status.setRollbackOnly();
-                        logger.error("领取活动，扣减个人已参与次数失败 activityId：{} uId：{}", partake.getActivityId(), partake.getuId());
+                        logger.error("领取活动，扣减个人剩余的活动参与次数失败 activityId：{} uId：{}", partake.getActivityId(), partake.getuId());
                         return new GrabResult(Result.buildResult(Constants.ResponseCode.NO_UPDATE),-1);
                     }
 
@@ -134,6 +144,16 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
             dbRouterStrategy.clear();
         }
 
+    }
+
+    @Override
+    public void updateInvoiceMqState(String uId, Long orderId, Integer mqState) {
+        userTakeActivityRepository.updateInvoiceMqState(uId, orderId, mqState);
+    }
+
+    @Override
+    public void updateActivityStock(ActivityPartakeVO activityPartakeVO) {
+        userTakeActivityRepository.updateActivityStock(activityPartakeVO);
     }
 
 }

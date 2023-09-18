@@ -3,6 +3,7 @@ package fr.utc.mylottery.domain.activity.service.partake;
 import fr.utc.mylottery.domain.activity.model.req.PartakeReq;
 import fr.utc.mylottery.domain.activity.model.res.PartakeResult;
 import fr.utc.mylottery.common.Result;
+import fr.utc.mylottery.domain.activity.model.vo.ActivityPartakeVO;
 import fr.utc.mylottery.domain.activity.model.vo.DrawOrderVO;
 
 /***
@@ -22,4 +23,17 @@ public interface IActivityPartake {
      * @return          保存结果
      */
     Result recordDrawOrder(DrawOrderVO drawOrder);
+
+    /**
+     * 更新发货单MQ状态
+     *  @param uId      用户ID
+     * @param orderId   订单ID
+     * @param mqState   MQ 发送状态
+     */
+    void updateInvoiceMqState(String uId, Long orderId, Integer mqState);
+    /**
+     * 更新活动库存
+     * @param activityPartakeVO   活动领取记录
+     */
+    void updateActivityStock(ActivityPartakeVO activityPartakeVO);
 }

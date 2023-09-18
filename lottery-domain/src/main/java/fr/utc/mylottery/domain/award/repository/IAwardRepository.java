@@ -10,4 +10,5 @@ public interface IAwardRepository {
      * @return        奖品信息
      */
     Award queryAwardInfo(String awardId);
+    void updateUserAwardState(String uId, Long orderId, String awardId, Integer grantState);
 }

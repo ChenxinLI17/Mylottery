@@ -1,36 +1,36 @@
 package fr.utc.mylottery.application.res;
 
 import fr.utc.mylottery.common.Result;
-import fr.utc.mylottery.domain.strategy.model.vo.DrawAwardInfo;
+import fr.utc.mylottery.domain.strategy.model.vo.DrawAwardVO;
 
 /**
  * 抽奖参与结果
  */
 public class DrawProcessResult extends Result {
-    private DrawAwardInfo drawAwardInfo;
+    private DrawAwardVO drawAwardVO;
     private Integer userTakeLeftCount;
 
     public DrawProcessResult(String code, String info) {
         super(code,info);
     }
 
-    public DrawProcessResult(String code, String info, DrawAwardInfo drawAwardInfo) {
+    public DrawProcessResult(String code, String info, DrawAwardVO drawAwardVO) {
         super(code,info);
-        this.drawAwardInfo = drawAwardInfo;
+        this.drawAwardVO = drawAwardVO;
     }
 
-    public DrawProcessResult(String code, String info, DrawAwardInfo drawAwardInfo, Integer userTakeLeftCount) {
+    public DrawProcessResult(String code, String info, DrawAwardVO drawAwardVO, Integer userTakeLeftCount) {
         super(code, info);
-        this.drawAwardInfo = drawAwardInfo;
+        this.drawAwardVO = drawAwardVO;
         this.userTakeLeftCount = userTakeLeftCount;
     }
 
-    public DrawAwardInfo getDrawAwardInfo() {
-        return drawAwardInfo;
+    public DrawAwardVO getDrawAwardInfo() {
+        return drawAwardVO;
     }
 
-    public void setDrawAwardInfo(DrawAwardInfo drawAwardInfo) {
-        this.drawAwardInfo = drawAwardInfo;
+    public void setDrawAwardInfo(DrawAwardVO drawAwardVO) {
+        this.drawAwardVO = drawAwardVO;
     }
     public Integer getUserTakeLeftCount() {
         return userTakeLeftCount;

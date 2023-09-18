@@ -5,7 +5,7 @@ import fr.utc.mylottery.domain.strategy.model.aggregates.StrategyRich;
 import fr.utc.mylottery.domain.strategy.model.req.DrawReq;
 import fr.utc.mylottery.domain.strategy.model.res.DrawResult;
 import fr.utc.mylottery.domain.strategy.model.vo.AwardRateInfo;
-import fr.utc.mylottery.domain.strategy.model.vo.DrawAwardInfo;
+import fr.utc.mylottery.domain.strategy.model.vo.DrawAwardVO;
 import fr.utc.mylottery.domain.strategy.service.algorithm.IDrawAlgorithm;
 import fr.utc.mylottery.infrastructure.po.Award;
 import fr.utc.mylottery.infrastructure.po.Strategy;
@@ -100,10 +100,10 @@ public abstract class AbstractDrawBase extends DrawStrategySupport implements ID
         }
 
         Award award = super.queryAwardInfoByAwardId(awardId);
-        DrawAwardInfo drawAwardInfo = new DrawAwardInfo(award.getAwardId(), award.getAwardType(), award.getAwardName(), award.getAwardContent());
+        DrawAwardVO drawAwardVO = new DrawAwardVO(award.getAwardId(), award.getAwardType(), award.getAwardName(), award.getAwardContent());
         logger.info("执行策略抽奖完成【已中奖】，用户：{} 策略ID：{} 奖品ID：{} 奖品名称：{}", uId, strategyId, awardId, award.getAwardName());
 
-        return new DrawResult(uId, strategyId, Constants.DrawState.SUCCESS.getCode(), drawAwardInfo);
+        return new DrawResult(uId, strategyId, Constants.DrawState.SUCCESS.getCode(), drawAwardVO);
     }
 
 }

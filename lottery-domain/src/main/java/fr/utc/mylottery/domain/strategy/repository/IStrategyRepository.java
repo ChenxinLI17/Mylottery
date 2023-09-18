@@ -5,7 +5,7 @@ import fr.utc.mylottery.domain.strategy.model.aggregates.StrategyRich;
 
 import java.util.List;
 
-public interface IStrategyRepository {//数据访问
+public interface IStrategyRepository {
     StrategyRich queryStrategyRich(Long strategyId);
 
     Award queryAwardInfo(String awardId);

@@ -40,7 +40,6 @@ public class UserStrategyExportDaoTest {
         logger.info("oo:{}",order_id);
         userStrategyExport.setOrderId(order_id);
         userStrategyExport.setStrategyId(10001L);
-        userStrategyExport.setStrategyMode(Constants.StrategyMode.SINGLE.getCode());
         userStrategyExport.setGrantDate(new Date());
         userStrategyExport.setGrantState(1);
         userStrategyExport.setAwardId("1");
