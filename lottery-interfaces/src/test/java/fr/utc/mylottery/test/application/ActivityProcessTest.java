@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.concurrent.ExecutionException;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ActivityProcessTest {
@@ -21,7 +23,7 @@ public class ActivityProcessTest {
     private IActivityProcess activityProcess;
 
     @Test
-    public void test_doDrawProcess() {
+    public void test_doDrawProcess() throws ExecutionException, InterruptedException {
         DrawProcessReq req = new DrawProcessReq();
         req.setuId("lichenxin");
         req.setActivityId(100001L);

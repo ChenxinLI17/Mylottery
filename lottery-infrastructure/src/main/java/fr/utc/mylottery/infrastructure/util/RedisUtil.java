@@ -1,22 +1,23 @@
 package fr.utc.mylottery.infrastructure.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisUtil {
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    private Logger logger = LoggerFactory.getLogger(RedisUtil.class);
 
 
     /**
@@ -68,12 +69,18 @@ public class RedisUtil {
     public void del(String... key) {
         if (key != null && key.length > 0) {
             if (key.length == 1) {
-                redisTemplate.delete(key[0]);
+                boolean suc = redisTemplate.delete(key[0]);
+                logger.info(key[0]+" 删除了吗 "+ suc);
             } else {
                 redisTemplate.delete((Collection<String>) CollectionUtils.arrayToList(key));
             }
         }
     }
+//    @SuppressWarnings("unchecked")
+//    public void del(String key) {
+//        boolean suc = redisTemplate.delete(key);
+//        logger.info(key+" 删除了吗 "+ suc);
+//    }
 
     //============================String=============================
 

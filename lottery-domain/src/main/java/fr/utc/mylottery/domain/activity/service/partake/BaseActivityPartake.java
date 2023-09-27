@@ -44,7 +44,7 @@ public abstract class BaseActivityPartake implements IActivityPartake{
         // 4. 扣减活动库存，通过Redis 把活动ID+库存扣减后的值一起作为分布式锁的Key Begin
         StockResult subtractionActivityResult = this.subtractionActivityStockByRedis(req.getuId(), req.getActivityId(), activityBillVO.getStockCount());
         if (!Constants.ResponseCode.SUCCESS.getCode().equals(subtractionActivityResult.getCode())) {
-            this.recoverActivityCacheStockByRedis(req.getActivityId(), subtractionActivityResult.getStockKey(), subtractionActivityResult.getCode());
+            this.recoverActivityCacheStockByRedis(req.getActivityId(), subtractionActivityResult.getStockTokenKey(), subtractionActivityResult.getCode());
             return new PartakeResult(subtractionActivityResult.getCode(), subtractionActivityResult.getInfo());
         }
 
@@ -52,11 +52,11 @@ public abstract class BaseActivityPartake implements IActivityPartake{
         Long takeId = idGeneratorMap.get(Constants.Ids.SnowFlake).nextId();
         GrabResult grabResult = this.grabActivity(req, activityBillVO, takeId);
         if (!Constants.ResponseCode.SUCCESS.getCode().equals(grabResult.getCode())) {
-            this.recoverActivityCacheStockByRedis(req.getActivityId(), subtractionActivityResult.getStockKey(), subtractionActivityResult.getCode());
+            this.recoverActivityCacheStockByRedis(req.getActivityId(), subtractionActivityResult.getStockTokenKey(), subtractionActivityResult.getCode());
             return new PartakeResult(grabResult.getCode(), grabResult.getInfo());
         }
         // 6. 扣减活动库存，通过Redis End
-        this.recoverActivityCacheStockByRedis(req.getActivityId(), subtractionActivityResult.getStockKey(), Constants.ResponseCode.SUCCESS.getCode());
+        this.recoverActivityCacheStockByRedis(req.getActivityId(), subtractionActivityResult.getStockTokenKey(), Constants.ResponseCode.SUCCESS.getCode());
 
         return buildPartakeResult(activityBillVO.getStrategyId(), takeId, activityBillVO.getStockCount(), subtractionActivityResult.getStockSurplusCount(),Constants.ResponseCode.SUCCESS,grabResult.getUserTakeLeftCount());
     }

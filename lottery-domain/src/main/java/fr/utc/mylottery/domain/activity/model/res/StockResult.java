@@ -11,7 +11,7 @@ public class StockResult extends Result {
     /**
      * 库存 Key
      */
-    private String stockKey;
+    private String stockTokenKey;
     /**
      * activity 库存剩余
      */
@@ -21,18 +21,18 @@ public class StockResult extends Result {
         super(code, info);
     }
 
-    public StockResult(String code, String info, String stockKey, Integer stockSurplusCount) {
+    public StockResult(String code, String info, String stockTokenKey, Integer stockSurplusCount) {
         super(code, info);
-        this.stockKey = stockKey;
+        this.stockTokenKey = stockTokenKey;
         this.stockSurplusCount = stockSurplusCount;
     }
 
-    public String getStockKey() {
-        return stockKey;
+    public String getStockTokenKey() {
+        return stockTokenKey;
     }
 
-    public void setStockKey(String stockKey) {
-        this.stockKey = stockKey;
+    public void setStockTokenKey(String stockTokenKey) {
+        this.stockTokenKey = stockTokenKey;
     }
 
     public Integer getStockSurplusCount() {

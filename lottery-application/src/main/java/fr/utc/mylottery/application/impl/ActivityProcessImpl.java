@@ -24,6 +24,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import javax.annotation.Resource;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @description: 活动抽奖流程编排
@@ -42,7 +43,7 @@ public class ActivityProcessImpl implements IActivityProcess {
     private KafkaProducer kafkaProducer;
 
     @Override
-    public DrawProcessResult doDrawProcess(DrawProcessReq req) {
+    public DrawProcessResult doDrawProcess(DrawProcessReq req) throws ExecutionException, InterruptedException {
         // 1. 领取活动
         PartakeResult partakeResult = activityPartake.doPartake(new PartakeReq(req.getuId(), req.getActivityId()));
         if (!Constants.ResponseCode.SUCCESS.getCode().equals(partakeResult.getCode())&& !Constants.ResponseCode.NOT_CONSUMED_TAKE.getCode().equals(partakeResult.getCode())) {

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /** API 接口实现 */
 @Service@org.apache.dubbo.config.annotation.Service(interfaceClass = IAPIBooth.class, version = "1.0.0")
@@ -52,7 +53,7 @@ public class APIBooth implements IAPIBooth {
         return new InitRes(new Result(Constants.ResponseCode.SUCCESS.getCode(), Constants.ResponseCode.SUCCESS.getInfo()), initDto);
     }
     @Override
-    public DrawRes doDraw(DrawReq drawReq) {
+    public DrawRes doDraw(DrawReq drawReq) throws ExecutionException, InterruptedException {
         DrawProcessReq req = new DrawProcessReq(drawReq.getuId(), drawReq.getActivityId());
         DrawProcessResult result = activityProcess.doDrawProcess(req);
         if (!Constants.ResponseCode.SUCCESS.getCode().equals(result.getCode())) {

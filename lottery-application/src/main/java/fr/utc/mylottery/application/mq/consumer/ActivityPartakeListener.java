@@ -8,6 +8,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,8 +26,8 @@ public class ActivityPartakeListener {
     @Resource
     private RedisUtil redisUtil;
 
-    @KafkaListener(topics = "lottery_activity_partake", groupId = "lottery")
-    public void onMessage(ConsumerRecord<?, ?> record) {
+    @KafkaListener(topics = "lottery_activity_partake", groupId = "lottery",concurrency = "1")
+    public void onMessage(ConsumerRecord<?, ?> record, Acknowledgment ack) {
         Optional<?> message = Optional.ofNullable(record.value());
 
         // 1. 判断消息是否存在
@@ -40,6 +41,7 @@ public class ActivityPartakeListener {
 
         // 3. 更新数据库库存【实际场景业务体量较大，可能也会由于MQ消费引起并发，对数据库产生压力，所以如果并发量较大，可以把库存记录缓存中，并使用定时任务进行处理缓存和数据库库存同步，减少对数据库的操作次数】
         activityPartake.updateActivityStock(activityPartakeVO);
+        ack.acknowledge();
         //String cacheKey = "stock_update_request-"+activityPartakeVO.getActivityId()+"-"+activityPartakeVO.getStockSurplusCount(); // 生成唯一的缓存键
         //redisUtil.set(cacheKey, activityPartakeVO);
 

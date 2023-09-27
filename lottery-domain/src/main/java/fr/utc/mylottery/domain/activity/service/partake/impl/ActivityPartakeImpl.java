@@ -86,8 +86,8 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
         return activityRepository.subtractionActivityStockByRedis(uId, activityId, stockCount);
     }
     @Override
-    protected void recoverActivityCacheStockByRedis(Long activityId, String tokenKey, String code) {
-        activityRepository.recoverActivityCacheStockByRedis(activityId, tokenKey, code);
+    protected void recoverActivityCacheStockByRedis(Long activityId, String stockTokenKey, String code) {
+        activityRepository.recoverActivityCacheStockByRedis(activityId, stockTokenKey, code);
     }
     @Override
     protected GrabResult grabActivity(PartakeReq partake, ActivityBillVO bill, Long takeId) {

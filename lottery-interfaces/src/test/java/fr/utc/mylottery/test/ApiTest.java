@@ -26,7 +26,7 @@ public class ApiTest {
     public void test_insert() {
         Activity activity = new Activity();
         activity.setActivityId(100003L);
-        activity.setActivityName("做爱");
+        activity.setActivityName("做");
         activity.setActivityDesc("仅用于插入数据测试");
         activity.setBeginDateTime(new Date());
         activity.setEndDateTime(new Date());
