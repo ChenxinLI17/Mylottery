@@ -5,7 +5,6 @@ import fr.utc.mylottery.domain.activity.model.vo.ActivityPartakeVO;
 import fr.utc.mylottery.domain.activity.model.vo.DrawOrderVO;
 import fr.utc.mylottery.domain.activity.model.vo.UserTakeActivityVO;
 import fr.utc.mylottery.domain.activity.repository.IUserTakeActivityRepository;
-import fr.utc.mylottery.domain.activity.service.partake.impl.ActivityPartakeImpl;
 import fr.utc.mylottery.infrastructure.dao.IActivityDao;
 import fr.utc.mylottery.infrastructure.dao.IUserStrategyExportDao;
 import fr.utc.mylottery.infrastructure.dao.IUserTakeActivityCountDao;
@@ -55,7 +54,7 @@ public class UserTakeActivityRepository implements IUserTakeActivityRepository {
     public void takeActivity(Long activityId, String activityName, Long strategyId, Integer takeCount, Integer userTakeLeftCount, String uId, Date takeDate, Long takeId) {
         UserTakeActivity userTakeActivity = new UserTakeActivity();
         userTakeActivity.setuId(uId);
-        userTakeActivity.setTakeId(takeId);
+        userTakeActivity.setOrderId(takeId);
         userTakeActivity.setActivityId(activityId);
         userTakeActivity.setActivityName(activityName);
         userTakeActivity.setTakeDate(takeDate);
@@ -76,7 +75,7 @@ public class UserTakeActivityRepository implements IUserTakeActivityRepository {
         UserTakeActivity userTakeActivity = new UserTakeActivity();
         userTakeActivity.setuId(uId);
         userTakeActivity.setActivityId(activityId);
-        userTakeActivity.setTakeId(takeId);
+        userTakeActivity.setOrderId(takeId);
         return userTakeActivityDao.lockTackActivity(userTakeActivity);
     }
 
@@ -113,7 +112,7 @@ public class UserTakeActivityRepository implements IUserTakeActivityRepository {
 
         UserTakeActivityVO userTakeActivityVO = new UserTakeActivityVO();
         userTakeActivityVO.setActivityId(noConsumedTakeActivityOrder.getActivityId());
-        userTakeActivityVO.setTakeId(noConsumedTakeActivityOrder.getTakeId());
+        userTakeActivityVO.setTakeId(noConsumedTakeActivityOrder.getOrderId());
         userTakeActivityVO.setStrategyId(noConsumedTakeActivityOrder.getStrategyId());
         userTakeActivityVO.setState(noConsumedTakeActivityOrder.getState());
 

@@ -7,8 +7,8 @@ public class UserTakeActivity {
     private Long id;
     /** 用户ID */
     private String uId;
-    /** 活动领取ID */
-    private Long takeId;
+    /** 订单ID */
+    private Long orderId;
     /** 活动ID */
     private Long activityId;
     /** 活动名称 */
@@ -51,12 +51,12 @@ public class UserTakeActivity {
         this.uId = uId;
     }
 
-    public Long getTakeId() {
-        return takeId;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setTakeId(Long takeId) {
-        this.takeId = takeId;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public Long getActivityId() {

@@ -69,8 +69,8 @@ public class RedisUtil {
     public void del(String... key) {
         if (key != null && key.length > 0) {
             if (key.length == 1) {
-                boolean suc = redisTemplate.delete(key[0]);
-                logger.info(key[0]+" 删除了吗 "+ suc);
+                redisTemplate.delete(key[0]);
+                //logger.info(key[0]+" 删除了吗 "+ suc);
             } else {
                 redisTemplate.delete((Collection<String>) CollectionUtils.arrayToList(key));
             }
@@ -136,11 +136,8 @@ public class RedisUtil {
      * @param lockExpireMils    锁住的时长。如果超时未解锁，视为加锁线程死亡，其他线程可夺取锁
      * @return
      */
-    public boolean setNx(String key, Long lockExpireMils) {
-        return (boolean) redisTemplate.execute((RedisCallback) connection -> {
-            //获取锁
-            return connection.setNX(key.getBytes(), String.valueOf(System.currentTimeMillis() + lockExpireMils + 1).getBytes());
-        });
+    public boolean setNx(String key, Object value, Long lockExpireMils) {
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(key, value, lockExpireMils, TimeUnit.SECONDS));
     }
 
     /**
@@ -168,6 +165,21 @@ public class RedisUtil {
         }
         return redisTemplate.opsForValue().increment(key, -delta);
     }
+    /**
+     * 递减
+     * @param key   键
+     * @param delta 要减少几(小于0)
+     * @return
+     */
+//    public int decr(String key, int delta) {
+//        String storedValue = (String) redisTemplate.opsForValue().get(key);
+//        int storedIntValue = Integer.parseInt(storedValue);
+//        // 执行减法操作
+//        int newValue = storedIntValue - delta;
+//        // 将新值以字符串形式存储回Redis中
+//        redisTemplate.opsForValue().set(key, String.valueOf(newValue),1000L,TimeUnit.MILLISECONDS);
+//        return newValue;
+//    }
 
     //================================Map=================================
 

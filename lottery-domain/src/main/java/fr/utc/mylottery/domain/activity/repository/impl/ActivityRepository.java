@@ -133,7 +133,7 @@ public class ActivityRepository implements IActivityRepository {
 
         // 2. 增加目前已占用的库存数
         Integer stockUsedCount = (int) redisUtil.incr(stockKey, 1);
-        logger.info("Key "+stockKey+" stockUsedCount: "+stockUsedCount);
+        //logger.info("Key "+stockKey+" stockUsedCount: "+stockUsedCount);
 
         // 3. 判断目前已占用的库存数是否超出活动的总库存，进行恢复原始库存
         if (stockUsedCount > stockCount) {
@@ -143,9 +143,9 @@ public class ActivityRepository implements IActivityRepository {
 
         // 4. 以活动库存占用编号，生成对应加锁Key，细化锁的颗粒度
         String stockTokenKey = Constants.RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT_TOKEN(activityId, stockUsedCount);
-        logger.info("创建滑动锁 "+stockTokenKey);
+        //logger.info("创建滑动锁 "+stockTokenKey);
         // 5. 使用 Redis.setNx 加一个分布式锁
-        boolean lockToken = redisUtil.setNx(stockTokenKey, 350L);
+        boolean lockToken = redisUtil.setNx(stockTokenKey, String.valueOf(System.currentTimeMillis() + 10000L + 1),1000L);
         if (!lockToken) {
             logger.info("抽奖活动{}用户秒杀{}扣减库存，分布式锁失败：{}", activityId, uId, stockTokenKey);
             return new StockResult(Constants.ResponseCode.ERR_TOKEN.getCode(), Constants.ResponseCode.ERR_TOKEN.getInfo());
@@ -153,14 +153,47 @@ public class ActivityRepository implements IActivityRepository {
 
         return new StockResult(Constants.ResponseCode.SUCCESS.getCode(), Constants.ResponseCode.SUCCESS.getInfo(), stockTokenKey, stockCount - stockUsedCount);
     }
+//    @Override
+//    public StockResult subtractionActivityStockByRedis(String uId, Long activityId, Integer stockCount) {
+//        //  1. 获取抽奖活动库存 Key
+//        String stockKey = Constants.RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT(activityId);
+//        logger.info("stockKey: "+ redisUtil.get(stockKey));
+//        if(redisUtil.get(stockKey)==null){
+//            Integer stockSurplusCount = activityDao.queryActivityById(activityId).getStockSurplusCount();
+//            logger.info("surplus: "+ stockSurplusCount);
+//            redisUtil.setNx(stockKey, String.valueOf(stockSurplusCount),6000000000000000L);
+//        }
+//
+//        // 2. 扣减缓存中的库存
+//        Integer stockSurplusCount = redisUtil.decr(stockKey, 1);
+//        //logger.info("Key "+stockKey+" stockSurplusCount: "+stockSurplusCount);
+//
+//        // 3. 判断目前缓存中是否还有足够的库存
+//        if (stockSurplusCount < 0) {
+//            redisUtil.incr(stockKey, 1);
+//            return new StockResult(Constants.ResponseCode.OUT_OF_STOCK.getCode(), Constants.ResponseCode.OUT_OF_STOCK.getInfo());
+//        }
+//
+//        // 4. 以活动库存占用编号，生成对应加锁Key，细化锁的颗粒度
+//        String stockTokenKey = Constants.RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT_TOKEN(activityId, stockSurplusCount);
+//        //logger.info("创建滑动锁 "+stockTokenKey);
+//        // 5. 使用 Redis.setNx 加一个分布式锁
+//        boolean lockToken = redisUtil.setNx(stockTokenKey, String.valueOf(System.currentTimeMillis() + 10000L + 1),10000L);
+//        if (!lockToken) {
+//            logger.info("抽奖活动{}用户秒杀{}扣减库存，分布式锁失败：{}", activityId, uId, stockTokenKey);
+//            return new StockResult(Constants.ResponseCode.ERR_TOKEN.getCode(), Constants.ResponseCode.ERR_TOKEN.getInfo());
+//        }
+//
+//        return new StockResult(Constants.ResponseCode.SUCCESS.getCode(), Constants.ResponseCode.SUCCESS.getInfo(), stockTokenKey, stockSurplusCount);
+//    }
     @Override
     public void recoverActivityCacheStockByRedis(Long activityId, String stockTokenKey, String code) {
         logger.info("删除锁"+stockTokenKey);
-        // 删除分布式锁 Key
-        redisUtil.del(stockTokenKey);
+        if(stockTokenKey!=null){
+            // 删除分布式锁 Key
+            redisUtil.del(stockTokenKey);
+        }
     }
-
-
 
 }
 

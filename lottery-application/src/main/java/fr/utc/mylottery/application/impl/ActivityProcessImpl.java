@@ -61,18 +61,18 @@ public class ActivityProcessImpl implements IActivityProcess {
         }
 
         Long strategyId = partakeResult.getStrategyId();
-        Long takeId = partakeResult.getTakeId();
+        Long orderId = partakeResult.getOrderId();
         Integer userTakeLeftCount = partakeResult.getUserTakeLeftCount();
 
         // 2. 执行抽奖
-        DrawResult drawResult = drawExec.doDrawExec(new DrawReq(req.getuId(), strategyId, takeId));
+        DrawResult drawResult = drawExec.doDrawExec(new DrawReq(req.getuId(), strategyId));
         if (Constants.DrawState.FAIL.getCode().equals(drawResult.getDrawState())) {
             return new DrawProcessResult(Constants.ResponseCode.LOSING_DRAW.getCode(), Constants.ResponseCode.LOSING_DRAW.getInfo());
         }
         DrawAwardVO drawAwardVO = drawResult.getDrawAwardInfo();
 
         // 3. 结果落库
-        DrawOrderVO drawOrderVO = buildDrawOrderVO(req, strategyId, takeId, drawAwardVO);
+        DrawOrderVO drawOrderVO = buildDrawOrderVO(req, strategyId, orderId, drawAwardVO);
         Result recordResult = activityPartake.recordDrawOrder(drawOrderVO);
         if (!Constants.ResponseCode.SUCCESS.getCode().equals(recordResult.getCode())) {
             return new DrawProcessResult(recordResult.getCode(), recordResult.getInfo());
@@ -100,11 +100,9 @@ public class ActivityProcessImpl implements IActivityProcess {
         return new DrawProcessResult(Constants.ResponseCode.SUCCESS.getCode(), Constants.ResponseCode.SUCCESS.getInfo(), drawAwardVO,userTakeLeftCount-1);
     }
 
-    private DrawOrderVO buildDrawOrderVO(DrawProcessReq req, Long strategyId, Long takeId, DrawAwardVO drawAwardVO) {
-        long orderId = idGeneratorMap.get(Constants.Ids.SnowFlake).nextId();
+    private DrawOrderVO buildDrawOrderVO(DrawProcessReq req, Long strategyId, Long orderId, DrawAwardVO drawAwardVO) {
         DrawOrderVO drawOrderVO = new DrawOrderVO();
         drawOrderVO.setuId(req.getuId());
-        drawOrderVO.setTakeId(takeId);
         drawOrderVO.setActivityId(req.getActivityId());
         drawOrderVO.setOrderId(orderId);
         drawOrderVO.setStrategyId(strategyId);

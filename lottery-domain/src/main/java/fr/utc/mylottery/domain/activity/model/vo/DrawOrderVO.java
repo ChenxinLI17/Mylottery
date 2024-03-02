@@ -8,8 +8,6 @@ import java.util.Date;
 public class DrawOrderVO {
     /** 用户ID */
     private String uId;
-    /** 活动领取ID */
-    private Long takeId;
     /** 活动ID */
     private Long activityId;
     /** 订单ID */
@@ -38,14 +36,6 @@ public class DrawOrderVO {
 
     public void setuId(String uId) {
         this.uId = uId;
-    }
-
-    public Long getTakeId() {
-        return takeId;
-    }
-
-    public void setTakeId(Long takeId) {
-        this.takeId = takeId;
     }
 
     public Long getActivityId() {
@@ -132,7 +122,6 @@ public class DrawOrderVO {
     public String toString() {
         return "DrawOrderVO{" +
                 "uId='" + uId + '\'' +
-                ", takeId=" + takeId +
                 ", activityId=" + activityId +
                 ", orderId=" + orderId +
                 ", strategyId=" + strategyId +

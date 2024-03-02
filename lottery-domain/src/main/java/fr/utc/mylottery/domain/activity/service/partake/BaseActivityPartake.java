@@ -10,11 +10,14 @@ import fr.utc.mylottery.domain.activity.model.vo.ActivityBillVO;
 import fr.utc.mylottery.domain.activity.model.vo.UserTakeActivityVO;
 import fr.utc.mylottery.domain.activity.repository.IActivityRepository;
 import fr.utc.mylottery.domain.support.ids.IIdGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import java.util.Map;
 
 public abstract class BaseActivityPartake implements IActivityPartake{
+    private Logger logger = LoggerFactory.getLogger(BaseActivityPartake.class);
 
     @Resource
     protected IActivityRepository activityRepository;
@@ -49,8 +52,8 @@ public abstract class BaseActivityPartake implements IActivityPartake{
         }
 
         // 5.领取活动信息 user_take_activity_count中扣减left_count字段，在user_take_activity中插入领取活动的记录
-        Long takeId = idGeneratorMap.get(Constants.Ids.SnowFlake).nextId();
-        GrabResult grabResult = this.grabActivity(req, activityBillVO, takeId);
+        Long orderId = idGeneratorMap.get(Constants.Ids.SnowFlake).nextId();
+        GrabResult grabResult = this.grabActivity(req, activityBillVO, orderId);
         if (!Constants.ResponseCode.SUCCESS.getCode().equals(grabResult.getCode())) {
             this.recoverActivityCacheStockByRedis(req.getActivityId(), subtractionActivityResult.getStockTokenKey(), subtractionActivityResult.getCode());
             return new PartakeResult(grabResult.getCode(), grabResult.getInfo());
@@ -58,7 +61,7 @@ public abstract class BaseActivityPartake implements IActivityPartake{
         // 6. 扣减活动库存，通过Redis End
         this.recoverActivityCacheStockByRedis(req.getActivityId(), subtractionActivityResult.getStockTokenKey(), Constants.ResponseCode.SUCCESS.getCode());
 
-        return buildPartakeResult(activityBillVO.getStrategyId(), takeId, activityBillVO.getStockCount(), subtractionActivityResult.getStockSurplusCount(),Constants.ResponseCode.SUCCESS,grabResult.getUserTakeLeftCount());
+        return buildPartakeResult(activityBillVO.getStrategyId(), orderId, activityBillVO.getStockCount(), subtractionActivityResult.getStockSurplusCount(),Constants.ResponseCode.SUCCESS,grabResult.getUserTakeLeftCount());
     }
     /**
      * 封装结果【返回的策略ID，用于继续完成抽奖步骤】
@@ -72,7 +75,7 @@ public abstract class BaseActivityPartake implements IActivityPartake{
     private PartakeResult buildPartakeResult(Long strategyId, Long takeId, Integer stockCount, Integer stockSurplusCount, Constants.ResponseCode code, Integer userTakeLeftCount) {
         PartakeResult partakeResult = new PartakeResult(code.getCode(), code.getInfo());
         partakeResult.setStrategyId(strategyId);
-        partakeResult.setTakeId(takeId);
+        partakeResult.setOrderId(takeId);
         partakeResult.setStockCount(stockCount);
         partakeResult.setStockSurplusCount(stockSurplusCount);
         partakeResult.setUserTakeLeftCount(userTakeLeftCount);
@@ -88,7 +91,7 @@ public abstract class BaseActivityPartake implements IActivityPartake{
     private PartakeResult buildPartakeResult(Long strategyId, Long takeId, Constants.ResponseCode code,Integer userTakeLeftCount) {
         PartakeResult partakeResult = new PartakeResult(code.getCode(), code.getInfo());
         partakeResult.setStrategyId(strategyId);
-        partakeResult.setTakeId(takeId);
+        partakeResult.setOrderId(takeId);
         partakeResult.setUserTakeLeftCount(userTakeLeftCount);
         return partakeResult;
     }

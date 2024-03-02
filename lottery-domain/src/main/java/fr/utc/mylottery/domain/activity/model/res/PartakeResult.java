@@ -8,8 +8,8 @@ import fr.utc.mylottery.common.Result;
 public class PartakeResult extends Result {
     /** 策略ID */
     private Long strategyId;
-    /** 活动领取ID */
-    private Long takeId;
+    /** 订单ID */
+    private Long orderId;
     /** 库存 */
     private Integer stockCount;
     /** activity 库存剩余 */
@@ -19,9 +19,9 @@ public class PartakeResult extends Result {
     private Integer userTakeLeftCount;
 
 
-    public PartakeResult(String code, String info, Long takeId) {
+    public PartakeResult(String code, String info, Long orderId) {
         super(code, info);
-        this.takeId = takeId;
+        this.orderId = orderId;
     }
 
     public PartakeResult(String code, String info) {
@@ -35,9 +35,9 @@ public class PartakeResult extends Result {
     public void setStrategyId(Long strategyId) {
         this.strategyId = strategyId;
     }
-    public Long getTakeId() { return takeId; }
+    public Long getOrderId() { return orderId; }
 
-    public void setTakeId(Long takeId) { this.takeId = takeId;}
+    public void setOrderId(Long orderId) { this.orderId = orderId;}
     public Integer getStockCount() {
         return stockCount;
     }

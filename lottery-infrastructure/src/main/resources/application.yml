@@ -26,10 +26,10 @@ mini-db-router:
         username: chenxinli
         password: jpxx1724
       db03:
-          driver-class-name: com.mysql.jdbc.Driver
-          url: jdbc:mysql://127.0.0.1:3306/lottery_03?useUnicode=true
-          username: chenxinli
-          password: jpxx1724
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/lottery_03?useUnicode=true
+        username: chenxinli
+        password: jpxx1724
 
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
@@ -48,11 +48,6 @@ dubbo:
   scan:
     base-packages: fr.utc.mylottery.rpc
 
-redis:
-  host: 127.0.0.1
-  port: 6379
-  timeout: 3000
-
 spring:
   kafka:
     bootstrap-servers: localhost:9092
@@ -68,12 +63,12 @@ spring:
       # 值的序列化方式
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       # acks=0 ： 生产者在成功写入消息之前不会等待任何来自服务器的响应。
-      # acks=1 ： 只要集群的首领节点收到消息，生产者就会收到一个来自服务器成功响应。
+      # acks=1 ： 只要集群的leader节点收到消息，生产者就会收到一个来自服务器成功响应。
       # acks=all ：只有当所有参与复制的节点全部收到消息时，生产者才会收到一个来自服务器的成功响应。
       acks: all
     consumer:
       # 自动提交的时间间隔 在spring boot 2.X 版本中这里采用的是值的类型为Duration 需要符合特定的格式，如1S,1M,2H,5D
-      # auto-commit-interval: 1S
+      auto-commit-interval: 1S
       # 该属性指定了消费者在读取一个没有偏移量的分区或者偏移量无效的情况下该作何处理：
       # latest（默认值）在偏移量无效的情况下，消费者将从最新的记录开始读取数据（在消费者启动之后生成的记录）
       # earliest ：在偏移量无效的情况下，消费者将从起始位置读取分区的记录
@@ -92,4 +87,15 @@ spring:
       ack-mode: manual_immediate
       missing-topics-fatal: false
       type: single
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 3000
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: 100
 

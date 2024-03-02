@@ -47,7 +47,7 @@ public class SpringRunnerTest {
     @Test
     public void test_award() {
         // 执行抽奖
-        DrawResult drawResult = drawExec.doDrawExec(new DrawReq("小傅哥", 10001L));
+        DrawResult drawResult = drawExec.doDrawExec(new DrawReq("chenxinli", 10001L));
 
         // 判断抽奖结果
         Integer drawState = drawResult.getDrawState();
@@ -70,7 +70,7 @@ public class SpringRunnerTest {
     @Test
     public void test_award1() {
         // 执行抽奖
-        DrawResult drawResult = drawExec.doDrawExec(new DrawReq("小傅哥", 10001L));
+        DrawResult drawResult = drawExec.doDrawExec(new DrawReq("chenxinli", 10001L));
 
         // 判断抽奖结果
         Integer drawState = drawResult.getDrawState();

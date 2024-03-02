@@ -5,7 +5,7 @@
     <resultMap id="userTakeActivityMap" type="fr.utc.mylottery.infrastructure.po.UserTakeActivity">
         <id column="id" property="id"/>
         <result column="u_id" property="uId"/>
-        <result column="take_id" property="takeId"/>
+        <result column="order_id" property="orderId"/>
         <result column="activity_id" property="activityId"/>
         <result column="activity_name" property="activityName"/>
         <result column="take_date" property="takeDate"/>
@@ -19,20 +19,20 @@
 
     <insert id="insert" parameterType="fr.utc.mylottery.infrastructure.po.UserTakeActivity">
         INSERT INTO user_take_activity
-        (u_id, take_id, activity_id, activity_name, take_date,
+        (u_id, order_id, activity_id, activity_name, take_date,
          take_count, strategy_id, state, uuid, create_time, update_time)
         VALUES
-            (#{uId}, #{takeId}, #{activityId}, #{activityName}, #{takeDate},
+            (#{uId}, #{orderId}, #{activityId}, #{activityName}, #{takeDate},
              #{takeCount}, #{strategyId}, #{state}, #{uuid}, now(), now())
     </insert>
 
     <update id="lockTackActivity" parameterType="fr.utc.mylottery.infrastructure.po.UserTakeActivity">
         UPDATE user_take_activity SET state = 1
-        WHERE u_id = #{uId} AND activity_id = #{activityId} AND take_id = #{takeId} AND state = 0
+        WHERE u_id = #{uId} AND activity_id = #{activityId} AND order_id = #{orderId} AND state = 0
     </update>
 
     <select id="queryNoConsumedTakeActivityOrder" parameterType="fr.utc.mylottery.infrastructure.po.UserTakeActivity" resultMap="userTakeActivityMap">
-        SELECT activity_id, take_id, strategy_id, state
+        SELECT activity_id, order_id, strategy_id, state
         FROM user_take_activity
         WHERE u_id = #{uId} AND activity_id = #{activityId} AND state = 0
         ORDER BY id DESC
